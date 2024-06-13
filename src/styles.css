@@ -1,0 +1,6 @@
+body {
+    background-color: #60d6f4; /* Cambiar al color de fondo deseado */
+    margin: 0; /* Asegura que no haya margen por defecto */
+    padding: 0; /* Asegura que no haya relleno por defecto */
+    font-family: Arial, sans-serif; /* Opcional: define la familia de fuentes global */
+  }
