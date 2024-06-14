@@ -30,11 +30,12 @@ export default {
 </script>
 
 <style scoped>
-.datetime {
-  font-size: 20px; /* Ajusta el tamaño de la fuente según sea necesario */
-  margin-left: 20px; /* Espacio entre el logo y la fecha/hora */
-  text-shadow: 1px 1px 2px rgba(225, 255, 1, 0.819); /* Añade sombra al texto */
+.datetime { 
+  text-shadow: 1px 1px 2px rgb(124, 235, 255); 
   color: rgb(255, 255, 252);
+  margin-left: 40px; 
+  font-size: 25px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
   
 }
 </style>

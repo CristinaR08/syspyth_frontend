@@ -7,8 +7,10 @@ const routes = [
     },
     {
         path: "/registrarEstudiante",
-        component: () => import("@/components/modules/registrarEstudiante.vue")
+        component: () => import("@/modulos/Estudiantes/registrarEstudiante.vue")
     },
+
+
 ];
 
 const router = createRouter({

@@ -7,7 +7,7 @@
 
 <script>
 import Header from './components/Header.vue'
-import principalCivil from './components/principalCivil.vue'
+import principalCivil from './modulos/Estudiantes/registrarEstudiante.vue'
 
 export default {
   name: 'App',
