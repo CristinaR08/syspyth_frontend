@@ -55,7 +55,7 @@ export default {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #0396ffc4;
+  background-color: #1A72C9;
   color: rgb(255, 255, 255);
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgb(0, 0, 0);
@@ -71,7 +71,7 @@ export default {
 }
 
 .dropdown-content a:hover {
-  background-color: #335B7B;
+  background-color: #104478;
   color: rgb(255, 254, 254);
 }
 
@@ -80,7 +80,7 @@ export default {
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #0396ff;
+  background-color: #1A72C9;
   color: rgb(0, 0, 0);
 }
 </style>

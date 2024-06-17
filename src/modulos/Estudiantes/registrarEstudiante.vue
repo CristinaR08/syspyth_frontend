@@ -4,14 +4,17 @@
   </div>
   <div class="container">
     <div class="datos">
+      <label for="">Cédula:</label>
+      <input type="text" v-model="cedula" />
+
       <label for="">Nombre:</label>
+      <input type="text" v-model="nombre" />
+
+      <label for="">Apellido:</label>
       <input type="text" v-model="nombre" />
 
       <label for="">Correo:</label>
       <input type="text" v-model="correo" />
-
-      <label for="">Cedula:</label>
-      <input type="text" v-model="cedula" />
 
       <label for="">Carrera:</label>
       <input type="text" v-model="carrera" />
@@ -76,11 +79,11 @@ export default {
   align-items: center;
   height: 60px; 
   justify-content: center;
-  margin: 20px 0px 40px 0px; /*top right bottom left*/ 
-  background-color: #f809097c;
-  box-shadow: 0 2px 4px rgb(112, 22, 22); 
+  margin: 30px 0px 40px 0px; /*top right bottom left*/ 
+  background-color: #4A0E0A;
+  box-shadow: 0 2px 4px rgb(0, 0, 2); 
   padding: 0 20px; 
-  color: rgb(15, 12, 49);
+  color: rgb(255, 255, 255);
   font-size: 20px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -89,10 +92,10 @@ export default {
   display: grid;
   justify-content: center;
   align-items: center;
-  background-color: #ffffff5e;
+  background-color:#DEEEFF ;
   border-radius: 15px;
-  border: 4px solid #520404;
-  margin: 0% 20%;
+  border: 4px solid #000000;
+  margin: 0% 30%;
 }
 .datos{
   display:grid;
@@ -105,8 +108,8 @@ button{
   margin: 30px 0px;
   font-size: 15px;
   padding: 10px;
-  color: #000000;
-  background: #c43613ce;
+  color: #ffffff;
+  background: #4A0E0A;
   border-radius: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
@@ -116,12 +119,12 @@ input,label{
 }
 
 input{
-  width: 120px;
+  width: 150px;
 }
 
 label{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 20px;
+  font-size: 25px;
   color: #000000;
 }
 

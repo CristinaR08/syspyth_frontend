@@ -14,7 +14,15 @@ export default {
   methods: {
     getCurrentDateTime() {
       const now = new Date();
-      return now.toLocaleString();
+      return now.toLocaleDateString('es-ES', {
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: 'numeric',
+        minute: 'numeric', 
+        second: 'numeric' 
+      });
     },
     updateDateTime() {
       this.currentDateTime = this.getCurrentDateTime();
