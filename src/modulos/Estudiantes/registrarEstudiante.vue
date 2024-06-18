@@ -1,31 +1,35 @@
 <template>
-  <div class="title">
-    <h2>Registro de Estudiante</h2>
-  </div>
-  <div class="container">
-    <div class="datos">
-      <label for="">Cédula:</label>
-      <input type="text" v-model="cedula" />
-
-      <label for="">Nombre:</label>
-      <input type="text" v-model="nombre" />
-
-      <label for="">Apellido:</label>
-      <input type="text" v-model="nombre" />
-
-      <label for="">Correo:</label>
-      <input type="text" v-model="correo" />
-
-      <label for="">Carrera:</label>
-      <input type="text" v-model="carrera" />
-
+  <div>
+    <div class="title">
+      <h2>Registro de Estudiante</h2>
     </div>
+    <div class="container">
+      <div class="datos">
+        <label for="cedula">Cédula:</label>
+        <input type="text" v-model="cedula" id="cedula"/>
+        
+        <label for="nombre">Nombre:</label>
+        <input type="text" v-model="nombre" id="nombre"/>
+        
+        <label for="apellido">Apellido:</label>
+        <input type="text" v-model="apellido" id="apellido"/>
+        
+        <label for="correo">Correo:</label>
+        <input type="email" v-model="correo" id="correo"/>
+        
+        <label for="carrera">Carrera:</label>
+        <input type="text" v-model="carrera" id="carrera"/>
+      </div>
 
-    
-    <div class="boton">
+      <div class="boton">
         <button @click="saveEstudent">Registrar Estudiante</button>
       </div>
 
+      <!-- Mensaje de error -->
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -36,38 +40,67 @@ import router from "@/router/router.js";
 export default {
   data() {
     return {
-      nombre: null,
-      correo: null,
-      cedula: null,
-      carrera: null,
+      nombre: "",
+      apellido: "",
+      correo: "",
+      cedula: "",
+      carrera: "",
+      errorMessage:""
     };
   },
 
   methods: {
-
     //LOGICA
-
     // CONEXIONES API
     async saveEstudent() {
       const ruta = `/registrarEstudiante`;
       await router.push(ruta);
 
-      const path = "http://localhost:5000/api/v1.0/estu_body";
+      // Validar el correo electrónico
+      if (!this.correo.endsWith("@uce.edu.ec")) {
+              this.errorMessage = "El correo debe ser de la UCE";
+              return;
+            }
+
+      const path = "http://127.0.0.1:5000/api/v1.0/registro_estudiantes/registrar";
       const data = {
         nombre: this.nombre,
+        apellido: this.apellido,
         correo: this.correo,
         cedula: this.cedula,
         carrera: this.carrera,
       };
-      axios
-        .post(path, data)
-        .then((response) => {
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      
+      try {
+        const response = await axios.post(path, data);
+        console.log(response.data);
+        alert("Estudiante registrado exitosamente.");
+        this.resetForm();
+      } catch (error) {
+        console.error(error);
+
+        if (error.response && error.response.data) {
+          const errorData = error.response.data;
+          if (errorData.code === "DUPLICATE_CEDULA") {
+            this.errorMessage = "La cédula ya está registrada.";
+          } else if (errorData.code === "DUPLICATE_CORREO") {
+            this.errorMessage = "El correo ya está registrado.";
+          } else {
+            this.errorMessage = "Ocurrió un error al registrar el estudiante.";
+          }
+        } else {
+          this.errorMessage = "Ocurrió un error al registrar el estudiante.";
+        }
+      }
     },
+    resetForm() {
+      this.nombre = "";
+      this.apellido = "";
+      this.correo = "";
+      this.cedula = "";
+      this.carrera = "";
+      this.errorMessage = "";
+    }
   },
 };
 </script>

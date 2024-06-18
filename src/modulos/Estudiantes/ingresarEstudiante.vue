@@ -7,19 +7,17 @@
     <h1>Por favor ingrese su cédula</h1>
   </div>
 
-
-  <!-- Cuadro de texto para el cedula -->
   <div>
       <label for="cedula">Cédula: </label>
       <input type="text" id="cedula" v-model="cedula" @blur="validarCedula">
       <p v-if="cedulaError" style="color: red;">{{ cedulaError }}</p>
-    </div>
+  </div>
 
     <button @click="validarCedula" class="validar">Validar</button>
 
-    <div class="contenedor">
-      <div class="Datos">
-        <label for="nombre">Nombre:</label>
+  <div class="contenedor">
+    <div class="Datos">
+      <label for="nombre">Nombre:</label>
       <span>{{ nombre }}</span>
       <label for="apellido">Apellido:</label>
       <span>{{ apellido }}</span>
@@ -27,45 +25,44 @@
       <span>{{ correo }}</span>
       <label for="carrera">Carrera:</label>
       <span>{{ carrera }}</span>
+    </div>
+
+    <div>
+      <label for="sala">Sala:</label>
+      <select id="sala" v-model="sala">
+        <option value="Aula1">Aula 1</option>
+        <option value="Aula2">Aula 2</option>
+        <option value="Aula3">Aula 3</option>
+        <option value="AulaA">Aula A</option>
+        <option value="AulaB">Aula B</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="numero_maquina">Número Máquina:</label>
+      <select id="numero_maquina" v-model="numeroMaquina">
+        <option v-if="sala === 'Aula1'" value="100">Equipo 100</option>
+        <option v-if="sala === 'Aula1'" value="101">Equipo 101</option>
+        <option v-if="sala === 'Aula2'" value="200">Equipo 200</option>
+        <option v-if="sala === 'Aula2'" value="201">Equipo 201</option>
+        <option v-if="sala === 'Aula3'" value="301">Equipo 201</option>
+        <option v-if="sala === 'Aula3'" value="302">Equipo 201</option>
+        <option v-if="sala === 'AulaA'" value="1">Equipo 201</option>
+        <option v-if="sala === 'AulaA'" value="2">Equipo 201</option>
+        <option v-if="sala === 'AulaB'" value="1">Equipo 201</option>
+        <option v-if="sala === 'AulaB'" value="2">Equipo 201</option>
+      </select>
+    </div>
+
+    <div class="fecha">
+      <label for="fecha">Fecha:</label>
+      <div class="datetime">
+        {{ currentDateTime }}
       </div>
-
-      <div>
-          <label for="sala">Sala:</label>
-          <select id="sala" v-model="sala">
-            <option value="Aula1">Aula 1</option>
-            <option value="Aula2">Aula 2</option>
-            <option value="Aula3">Aula 3</option>
-            <option value="AulaA">Aula A</option>
-            <option value="AulaB">Aula B</option>
-            
-          </select>
-        </div>
-
-        <!-- Combobox para seleccionar el equipo -->
-        <div>
-          <label for="numero_maquina">Número Máquina:</label>
-          <select id="numero_maquina" v-model="numeroMaquina">
-          <option v-if="sala === 'Aula1'" value="100">Equipo 100</option>
-          <option v-if="sala === 'Aula1'" value="101">Equipo 101</option>
-          <option v-if="sala === 'Aula2'" value="200">Equipo 200</option>
-          <option v-if="sala === 'Aula2'" value="201">Equipo 201</option>
-          <option v-if="sala === 'Aula3'" value="301">Equipo 201</option>
-          <option v-if="sala === 'Aula3'" value="302">Equipo 201</option>
-          <option v-if="sala === 'AulaA'" value="1">Equipo 201</option>
-          <option v-if="sala === 'AulaA'" value="2">Equipo 201</option>
-          <option v-if="sala === 'AulaB'" value="1">Equipo 201</option>
-          <option v-if="sala === 'AulaB'" value="2">Equipo 201</option>
-          </select>
-        </div>
-
-        <div class="fecha">
-          <label for="fecha">Fecha:</label>
-          <div class="datetime">
-      {{ currentDateTime }}
-    </div>
-        </div>
-        <button @click="registrarAsistencia">Registrar Asistencia</button>
-    </div>
+    </div >
+    
+    <button @click="registrarAsistencia" class="registrar">Registrar Asistencia</button>
+  </div>
   
 </template>
 
@@ -151,8 +148,7 @@ export default {
 .indicacion{
   font-size: 15px;
   color: black;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
-}
+  font-family: 'Courier New', Courier, monospace;}
 
 .Datos{
   display: grid
@@ -165,7 +161,12 @@ export default {
 
 .fecha label {
   margin-right: 10px; 
+}
 
+.datetime{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  color: black;
 }
 
 .validar{
@@ -183,11 +184,19 @@ export default {
   margin: 0% 30%;
 }
 
+.registrar{
+  margin: 15px;
+}
+
 label{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 25px;
   color: #000000;
   margin: 10px;
 }
+
+select{
+    height: 25px;
+  }
 
 </style>

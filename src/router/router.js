@@ -1,13 +1,22 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 
+
 const routes = [
     {
+        //path: "/:patchMatch(.*)",
+        //component: () => import('@/components/NotFound')
+    },
+    {
         path: "/",
-        component: () => import("@/components/principalCivil.vue")
+        component: () =>import('@/components/principalCivil') 
     },
     {
         path: "/registrarEstudiante",
-        component: () => import("@/modulos/Estudiantes/registrarEstudiante.vue")
+        component: () =>import('@/modulos/Estudiantes/registrarEstudiante')
+    },
+    {
+        path: "/ingresarEstudiante",
+        component: () => import ('@/modulos/Estudiantes/ingresarEstudiante')
     },
 
 
