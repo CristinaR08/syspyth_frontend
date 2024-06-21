@@ -7,13 +7,13 @@
     <h1>Por favor ingrese su cédula</h1>
   </div>
 
-  <div>
+  <div class="cedula">
       <label for="cedula">Cédula: </label>
       <input type="text" id="cedula" v-model="cedula" @blur="validarCedula">
       <p v-if="cedulaError" style="color: red;">{{ cedulaError }}</p>
   </div>
 
-    <button @click="validarCedula" class="validar">Validar</button>
+  <button @click="validarCedula" class="validar">Validar</button>
 
   <div class="contenedor">
     <div class="Datos">
@@ -30,6 +30,7 @@
     <div>
       <label for="sala">Sala:</label>
       <select id="sala" v-model="sala">
+        <option disabled value="">Selecciona un aula</option>
         <option value="Aula1">Aula 1</option>
         <option value="Aula2">Aula 2</option>
         <option value="Aula3">Aula 3</option>
@@ -41,16 +42,32 @@
     <div>
       <label for="numero_maquina">Número Máquina:</label>
       <select id="numero_maquina" v-model="numeroMaquina">
-        <option v-if="sala === 'Aula1'" value="100">Equipo 100</option>
-        <option v-if="sala === 'Aula1'" value="101">Equipo 101</option>
-        <option v-if="sala === 'Aula2'" value="200">Equipo 200</option>
-        <option v-if="sala === 'Aula2'" value="201">Equipo 201</option>
-        <option v-if="sala === 'Aula3'" value="301">Equipo 201</option>
-        <option v-if="sala === 'Aula3'" value="302">Equipo 201</option>
-        <option v-if="sala === 'AulaA'" value="1">Equipo 201</option>
-        <option v-if="sala === 'AulaA'" value="2">Equipo 201</option>
-        <option v-if="sala === 'AulaB'" value="1">Equipo 201</option>
-        <option v-if="sala === 'AulaB'" value="2">Equipo 201</option>
+        <option disabled value="">Selecciona un equipo</option>
+        
+  <template v-if="sala === 'Aula1'">
+    <option value="101">Equipo 101</option>
+    <option v-for="i in 19" :key="'Aula1-' + i" :value="101 + i">Equipo {{ 101 + i }}</option>
+  </template>
+
+  <template v-if="sala === 'Aula2'">
+    <option value="201">Equipo 201</option>
+    <option v-for="i in 19" :key="'Aula2-' + i" :value="201 + i">Equipo {{ 201 + i }}</option>
+  </template>
+
+  <template v-if="sala === 'Aula3'">
+    <option value="301">Equipo 301</option>
+    <option v-for="i in 19" :key="'Aula3-' + i" :value="301 + i">Equipo {{ 301 + i }}</option>
+  </template>
+
+  <template v-if="sala === 'AulaA'">
+  <option value="101">Equipo A01</option>
+  <option v-for="i in 29" :key="'AulaA-' + i" :value="'A' + formatNumber(i + 1)">Equipo {{ 'A' + formatNumber(i + 1) }}</option>
+</template>
+
+<template v-if="sala === 'AulaB'">
+  <option value="101">Equipo B01</option>
+  <option v-for="i in 23" :key="'AulaB-' + i" :value="'B' + formatNumber(i + 1)">Equipo {{ 'B' + formatNumber(i + 1) }}</option>
+</template>
       </select>
     </div>
 
@@ -61,16 +78,19 @@
       </div>
     </div >
     
-    <button @click="registrarAsistencia" class="registrar">Registrar Asistencia</button>
+    <button @click="registrarAsistencia" class="registrar" :disabled="!cedulaValida">Registrar Asistencia</button>
   </div>
   
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       currentDateTime: this.getCurrentDateTime(),
+      cedula: '',
       nombre: '',
       apellido: '',
       correo: '',
@@ -78,42 +98,64 @@ export default {
       equipo: '',
       emailError: '',
       sala:'',
-      numeroMaquina: ''
+      numeroMaquina: '',
+      cedulaError: '',
+      cedulaValida: false
     };
   },
   methods: {
-    async fetchUserData() {
+    formatNumber(number) {
+      return number.toString().padStart(2, '0');
+    },
+    async validarCedula() {
+      if (!this.cedula) {
+        this.cedulaError = 'La cédula es obligatoria';
+        this.cedulaValida = false;
+        return;
+      }
+
       try {
-        // Aquí simulamos una solicitud HTTP para obtener los datos del usuario desde tu base de datos
-        const response = await fetch('https:');
-        if (!response.ok) {
-          throw new Error('No se pudo obtener los datos del usuario');
-        }
-        const data = await response.json();
-        // Asignamos los datos obtenidos a las variables del componente
+        const response = await axios.get(`http://127.0.0.1:5000/api/v1.0/estudiantes/consultar/${this.cedula}`);
+        const data = response.data;
         this.nombre = data.nombre;
         this.apellido = data.apellido;
         this.correo = data.correo;
         this.carrera = data.carrera;
+        this.cedulaError = '';
+        this.cedulaValida = true;
       } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error.message);
+        this.cedulaError = error.response ? error.response.data.message : 'No existe estudiante registrado con esa cédula';
+        this.cedulaValida = false;
       }
     },
-    validarEmail() {
-      if (!this.correo.endsWith('@uce.edu.ec')) {
-        this.emailError = 'El correo debe ser de la Universidad Central del Ecuador (uce.edu.ec)';
-      } else {
-        this.emailError = '';
+    async registrarAsistencia() {
+      if (!this.cedulaValida || !this.numeroMaquina || !this.sala) {
+        this.cedulaError = 'Debes completar todos los campos antes de registrar la asistencia';
+        return;
       }
-    },
-    registrarAsistencia() {
-      // Aquí puedes realizar alguna acción con los datos, como enviarlos a un servidor
-      console.log('Registrando asistencia...');
-      console.log('Datos del estudiante:', this.estudiante);
-      //fetch
+
+      const registroData = {
+        cedula: this.cedula,
+        numero_maquina: this.numeroMaquina,
+        sala: this.sala
+      };
+
+      try {
+        const response = await axios.post('http://127.0.0.1:5000/api/v1.0/registro_estudiantes/registrar', registroData);
+        alert('Asistencia registrada exitosamente');
+        // Limpiar los datos después de registrar
+        this.cedula = '';
+        this.datosEstudiante = null;
+        this.numeroMaquina = '';
+        this.sala = '';
+        this.cedulaValida = null;
+        this.cedulaError = '';
+      } catch (error) {
+        this.cedulaError = error.response ? error.response.data.error : 'Error al registrar la asistencia';
+      }
     },
     getCurrentDateTime() {
-      const now = new Date(); //fecha larga
+      const now = new Date();
       return now.toLocaleString();
     },
     updateDateTime() {
@@ -150,8 +192,10 @@ export default {
   color: black;
   font-family: 'Courier New', Courier, monospace;}
 
+
 .Datos{
-  display: grid
+  display: grid;
+  grid-template-columns: repeat(2, 100px);
 }
 
 .fecha {
@@ -172,6 +216,7 @@ export default {
 .validar{
   margin: 15px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold
 }
 
 .contenedor{
@@ -186,7 +231,10 @@ export default {
 
 .registrar{
   margin: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold
 }
+
 
 label{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -199,4 +247,24 @@ select{
     height: 25px;
   }
 
+  button{
+  margin: 30px 0px;
+  font-size: 15px;
+  padding: 10px;
+  color: #ffffff;
+  background: #4A0E0A;
+  border-radius: 10px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+span{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 25px;
+  color: #444242;
+  margin: 10px;
+}
+
+select{
+  margin: 10px;
+}
 </style>

@@ -40,10 +40,10 @@ import router from "@/router/router.js";
 export default {
   data() {
     return {
+      cedula: "",
       nombre: "",
       apellido: "",
       correo: "",
-      cedula: "",
       carrera: "",
       errorMessage:""
     };
@@ -53,53 +53,39 @@ export default {
     //LOGICA
     // CONEXIONES API
     async saveEstudent() {
-      const ruta = `/registrarEstudiante`;
-      await router.push(ruta);
-
-      // Validar el correo electrónico
-      if (!this.correo.endsWith("@uce.edu.ec")) {
-              this.errorMessage = "El correo debe ser de la UCE";
-              return;
-            }
-
-      const path = "http://127.0.0.1:5000/api/v1.0/registro_estudiantes/registrar";
-      const data = {
-        nombre: this.nombre,
-        apellido: this.apellido,
-        correo: this.correo,
-        cedula: this.cedula,
-        carrera: this.carrera,
-      };
+      // Validaciones antes de enviar la solicitud
+      if (!this.cedula || !this.nombre || !this.apellido || !this.correo || !this.carrera) {
+        this.errorMessage = 'Todos los campos son obligatorios';
+        return;
+      }
       
-      try {
-        const response = await axios.post(path, data);
-        console.log(response.data);
-        alert("Estudiante registrado exitosamente.");
-        this.resetForm();
-      } catch (error) {
-        console.error(error);
+      if (!this.correo.endsWith('@uce.edu.ec')) {
+        this.errorMessage = 'El correo electrónico debe ser de la UCE';
+        return;
+      }
 
-        if (error.response && error.response.data) {
-          const errorData = error.response.data;
-          if (errorData.code === "DUPLICATE_CEDULA") {
-            this.errorMessage = "La cédula ya está registrada.";
-          } else if (errorData.code === "DUPLICATE_CORREO") {
-            this.errorMessage = "El correo ya está registrado.";
-          } else {
-            this.errorMessage = "Ocurrió un error al registrar el estudiante.";
-          }
+      try {
+        const response = await axios.post('http://127.0.0.1:5000/api/v1.0/estudiantes/registrar', {
+          cedula: this.cedula,
+          nombre: this.nombre,
+          apellido: this.apellido,
+          correo: this.correo,
+          carrera: this.carrera
+        });
+        alert('Estudiante registrado exitosamente.');
+        this.errorMessage = '';
+        this.cedula = '';
+        this.nombre = '';
+        this.apellido = '';
+        this.correo = '';
+        this.carrera = '';
+      } catch (error) {
+        if (error.response) {
+          this.errorMessage = error.response.data.error;
         } else {
-          this.errorMessage = "Ocurrió un error al registrar el estudiante.";
+          this.errorMessage = 'Error al registrar el estudiante';
         }
       }
-    },
-    resetForm() {
-      this.nombre = "";
-      this.apellido = "";
-      this.correo = "";
-      this.cedula = "";
-      this.carrera = "";
-      this.errorMessage = "";
     }
   },
 };
@@ -119,6 +105,10 @@ export default {
   color: rgb(255, 255, 255);
   font-size: 20px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+alert{
+  font-size: 40px;
 }
 
 .container {
@@ -159,6 +149,12 @@ label{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 25px;
   color: #000000;
+}
+
+.error-message {
+  color: red;
+  margin: 10px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 </style>

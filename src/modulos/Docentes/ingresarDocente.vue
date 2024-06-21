@@ -21,7 +21,7 @@
     </div>
 
     <!-- Botón para enviar el formulario (opcional) -->
-    <button @click="crearDocente" :disabled="cedulaError || contraseñaError">INGRESAR</button>
+    <button @click="ingresarAsistencia">INGRESAR</button>
   
   </div>
     
@@ -47,15 +47,8 @@ export default {
         this.cedulaError = '';
       }
     },
-    crearDocente() {
-      // Validar que las contraseñas coincidan
-      if (this.nuevaContraseña !== this.confirmarContraseña) {
-        this.contraseñaError = 'Las contraseñas no coinciden';
-        return;
-      }
-      // Aquí puedes realizar alguna acción con los datos, como enviarlos a un servidor
-      console.log('Cédula:', this.cedula);
-      console.log('Nueva Contraseña:', this.nuevaContraseña);
+    ingresarAsistencia(){
+      this.$router.push({path:'/asistenciaDocente'})
     }
   }
 };

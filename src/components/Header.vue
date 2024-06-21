@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <DateTime />
-    <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" />
+    <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" @click="principal" style="cursor: pointer;"/>
     <div class="options">
       <DropdownMenu title="Registrar" :items="['Estudiante']" />
       <DropdownMenu title="Ingresar" :items="['Docente', 'Estudiante']" />
@@ -18,7 +18,14 @@ export default {
   components: {
     DropdownMenu,
     DateTime
+  },
+
+  methods: {
+    principal(){
+      this.$router.push({path:"/"})
+    }
   }
+
 }
 </script>
 

@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1 class="asis">Asistencia</h1>
-
     <div class="salas">
       <label for="sala">Sala:</label>
       <select id="sala" v-model="sala">
@@ -89,35 +88,33 @@
       </select>
       </div>
       <div class="boton">
-        <button @click="registrarAsistencia">VER LISTA</button>
+        <button @click="verEstudiantes">VER LISTA</button>
       </div>
     </div>
 
-<div class="mostrarLista">
-  <div class="lista">
-    <h1>Registro de Estudiantes</h1>
+<div v-if="mostrarLista" class="lista">
+  <h1 class="listado">Registro de Estudiantes</h1>
   <table>
     <thead>
       <tr>
-        <th>Nómina</th>
-        <th>Equipo</th>
-        <th>Cédula</th>
-        <th>Check</th>
+        <th>NÓMINA</th>
+        <th>EQUIPO</th>
+        <th>CÉDULA</th>
+        <th>ASISTENCIA</th>
       </tr>
     </thead>
-    <tbody>
-        <tr v-for="student in students" :key="student.cedula">
+    <tbody> 
+      <!--<tr v-for="student in students" :key="student.cedula"> 
           <td>{{ student.cedula }}</td>
           <td>{{ student.nombre }}</td>
           <td>{{ student.apellido }}</td>
           <td>{{ student.correo }}</td>
           <td>{{ student.carrera }}</td>
-        </tr>
+        </tr> -->
       </tbody>
   </table>
-  </div>
+  <button class="registrar" @click="registrarAsistencia">REGISTRAR ASISTENCIA</button>
 </div>
-
   </div>
 </template>
 
@@ -125,10 +122,14 @@
 export default {
   data() {
     return {
-      email: '',
-      password: '',
-      emailError: '',
-      mostrarContrasena: false
+      sala: '',
+      docente: '',
+      materia: '',
+      semestre: '',
+      paralelo: '',
+      Inicio: '',
+      Fin: '',
+      mostrarLista: false
     };
   },
   computed: {
@@ -137,20 +138,11 @@ export default {
     }
   },
   methods: {
-    validarEmail() {
-      if (!this.email.endsWith('@uce.edu.ec')) {
-        this.emailError = 'El email debe ser de la Universidad Central del Ecuador (uce.edu.ec)';
-      } else {
-        this.emailError = '';
-      }
+    verEstudiantes() {
+      this.mostrarLista = true;
     },
-    toggleMostrarContrasena() {
-      this.mostrarContrasena = !this.mostrarContrasena;
-    },
-    registrarAsistencia() {
-      // Aquí puedes realizar alguna acción con los datos, como enviarlos a un servidor
-      console.log('Email:', this.email);
-      console.log('Contraseña:', this.password);
+    registrarAsistencia(){
+      this.$router.push({path:'/solicitudExitosa'})
     }
   }
 };
@@ -193,7 +185,23 @@ export default {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-button{
+.listado{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px; 
+  justify-content: center;
+  margin: 40px 0px 40px 0px; /*top right bottom left*/ 
+  background-color: #4A749F;
+  box-shadow: 0 2px 4px rgb(0, 0, 2); 
+  padding: 0 20px; 
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+
+button {
   margin: 30px 0px;
   font-size: 15px;
   padding: 10px;
@@ -202,6 +210,11 @@ button{
   border-radius: 10px;
   width: 200px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.registrar{
+  background: #1A72C9;
+  font-weight: bold;
 }
 
 label{
@@ -222,14 +235,16 @@ select{
 }
 
 th, td {
-  border: 1px solid #ddd;
+  border: 1px solid #C2DBF4;
   padding: 8px;
-  text-align: left;
 }
 
 th {
-  background-color: #8EC97F;
+  background-color: #0A2A4A;
   font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 </style>

@@ -42,7 +42,7 @@ export default {
   text-shadow: 1px 1px 2px rgb(124, 235, 255); 
   color: rgb(255, 255, 252);
   margin-left: 40px; 
-  font-size: 25px;
+  font-size: 20px;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
   
 }

@@ -3,8 +3,12 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
     {
-        //path: "/:patchMatch(.*)",
-        //component: () => import('@/components/NotFound')
+        path: "/:patchMatch(.*)",
+        component: () => import('@/components/NotFound')
+    },
+    {
+        path: "/solicitudExitosa",
+        component: () => import('@/components/solicitudExitosa')
     },
     {
         path: "/",
@@ -19,7 +23,15 @@ const routes = [
         component: () => import ('@/modulos/Estudiantes/ingresarEstudiante')
     },
 
-
+    {
+        path: "/ingresarDocente",
+        component: () => import ('@/modulos/Docentes/ingresarDocente')
+    },
+    {
+        path: "/asistenciaDocente",
+        component: () =>import('@/modulos/Docentes/AsistenciaDocente') 
+    },
+    
 ];
 
 const router = createRouter({

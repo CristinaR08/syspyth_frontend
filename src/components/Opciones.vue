@@ -2,7 +2,11 @@
   <div class="dropdown">
     <button class="dropbtn" @click="toggleDropdown">{{ title }}</button>
     <div class="dropdown-content" v-if="showDropdown">
-      <a v-for="item in items" :key="item" href="#">{{ item }}</a>
+      <a v-for="item in items" :key="item" href="#">
+        <router-link v-if="item=='Estudiante' && title=='Registrar'" to="/registrarEstudiante"> {{ item }} </router-link>
+        <router-link v-if="item=='Estudiante' && title=='Ingresar'" to="/ingresarEstudiante"> {{ item }} </router-link>
+        <router-link v-if="item=='Docente' && title=='Ingresar'" to="/ingresarDocente"> {{ item }} </router-link>
+      </a>
     </div>
   </div>
 </template>
@@ -12,23 +16,23 @@ export default {
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     items: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      showDropdown: false
+      showDropdown: false,
     };
   },
   methods: {
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -41,7 +45,7 @@ export default {
 }
 
 .dropbtn {
-  background-color: #0A2B4B;
+  background-color: #0a2b4b;
   color: rgb(255, 255, 255);
   padding: 10px 30px;
   font-size: 16px;
@@ -49,13 +53,13 @@ export default {
   border-radius: 10px;
   cursor: pointer;
   font-weight: bolder;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #1A72C9;
+  background-color: #1a72c9;
   color: rgb(255, 255, 255);
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgb(0, 0, 0);
@@ -67,7 +71,7 @@ export default {
   padding: 12px 16px;
   text-decoration: none;
   display: block;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
 .dropdown-content a:hover {
@@ -80,7 +84,7 @@ export default {
 }
 
 .dropdown:hover .dropbtn {
-  background-color: #1A72C9;
+  background-color: #1a72c9;
   color: rgb(0, 0, 0);
 }
 </style>
