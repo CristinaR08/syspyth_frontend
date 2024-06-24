@@ -31,6 +31,10 @@ const routes = [
         path: "/asistenciaDocente",
         component: () =>import('@/modulos/Docentes/AsistenciaDocente') 
     },
+    {
+        path: "/principal_admin",
+        component: () =>import('@/modulos/Administrador/principalAdmin') 
+    },
     
 ];
 

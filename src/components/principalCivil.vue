@@ -12,8 +12,8 @@
 <style>
  .bg-gray-900 {
   background-image: url('~@/assets/logoUCE1.png');
-    background-size: auto 50%; 
-    background-position: center; 
+    background-size: auto 60%; 
+    background-position:center ; 
     background-repeat: no-repeat;
     position: relative; 
     min-height: 100vh; 

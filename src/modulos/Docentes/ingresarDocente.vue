@@ -1,107 +1,139 @@
 <template>
   <div class="title">
     <h1>Bienvenido/a Ingeniero/a</h1>
-  </div> 
+  </div>
   <div class="indicacion">
     <h1>Por favor, ingrese sus credenciales</h1>
   </div>
-  
+
   <div class="container">
     <div>
       <label for="cedula">Cédula:</label>
-      <input type="text" id="cedula" v-model="cedula" @input="validarCedula">
-      <p v-if="cedulaError" style="color: red;">{{ cedulaError }}</p>
+      <input type="text" id="cedula" v-model="cedula" @input="validarCedula" />
+      <p v-if="cedulaError" style="color: red">{{ cedulaError }}</p>
     </div>
 
     <!-- Cuadro de texto para la contraseña -->
     <div>
       <label for="confirmarContraseña">Contraseña:</label>
-      <input type="password" id="confirmarContraseña" v-model="confirmarContraseña">
-      <p v-if="contraseñaError" style="color: red;">{{ contraseñaError }}</p>
+      <input
+        type="password"
+        id="confirmarContraseña"
+        v-model="confirmarContraseña"
+      />
+      <p v-if="contraseñaError" style="color: red">{{ contraseñaError }}</p>
     </div>
 
-    <!-- Botón para enviar el formulario (opcional) -->
     <button @click="ingresarAsistencia">INGRESAR</button>
-  
   </div>
-    
 </template>
 
   <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      cedula: '',
-      nuevaContraseña: '',
-      confirmarContraseña: '',
-      cedulaError: '',
-      contraseñaError: ''
+      cedula: "",
+      confirmarContraseña: "",
+      cedulaError: "",
+      contraseñaError: "",
     };
   },
   methods: {
-    validarCedula() {
-      const cedulaRegex = /^[0-9]{10}$/;
-      if (!cedulaRegex.test(this.cedula)) {
-        this.cedulaError = 'La cédula debe contener solo números y tener exactamente 10 dígitos';
-      } else {
-        this.cedulaError = '';
+
+    async ingresarAsistencia() {
+      // Validar cédula y contraseña
+      if (!this.cedula || !this.confirmarContraseña) {
+        this.cedulaError = 'Debe ingresar la cédula';
+        this.contraseñaError = 'Debe ingresar la contraseña';
+        return;
       }
-    },
-    ingresarAsistencia(){
-      this.$router.push({path:'/asistenciaDocente'})
+
+      try {
+        // Consultar si la cédula pertenece a un docente
+        const responseDocente = await axios.get(`http://127.0.0.1:5000/api/v1.0/docentes/consultar/${this.cedula}`);
+        if (responseDocente.data.message) {
+          this.cedulaError = responseDocente.data.message;
+          return;
+        }
+
+        // Consultar si la cédula pertenece a un administrador
+        const responseAdmin = await axios.get(`http://127.0.0.1:5000/api/v1.0/administradores/consultar/${this.cedula}`);
+        if (responseAdmin.data.message) {
+          this.cedulaError = responseAdmin.data.message;
+          return;
+        }
+        
+        // Redirigir según el tipo de usuario
+        if (responseDocente.data) {
+          // Redireccionar a la página de docente
+          this.$router.push('/asistenciaDocente')
+        } else if (responseAdmin.data) {
+          // Redireccionar a la página de administrador
+          this.$router.push('/principal_admin')
+        }
+      } catch (error) {
+        console.error('Error al consultar el usuario:', error);
+        this.cedulaError = 'Error al consultar el usuario';
+      }
     }
-  }
+  },
 };
 </script>
 
+principal(){
+  this.$router.push({path:"/"})
+}
+
 <style scoped>
-.title{
+.title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px; 
+  height: 60px;
   justify-content: center;
-  margin: 30px 0px 40px 0px; /*top right bottom left*/ 
-  background-color: #4A0E0A;
-  box-shadow: 0 2px 4px rgb(0, 0, 2); 
-  padding: 0 20px; 
+  margin: 30px 0px 40px 0px; /*top right bottom left*/
+  background-color: #4a0e0a;
+  box-shadow: 0 2px 4px rgb(0, 0, 2);
+  padding: 0 20px;
   color: rgb(255, 255, 255);
   font-size: 20px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-.indicacion{
-font-size: 15px;
-color: black;
-font-family: 'Courier New', Courier, monospace;
+.indicacion {
+  font-size: 15px;
+  color: black;
+  font-family: "Courier New", Courier, monospace;
 }
 
-.container{
+.container {
   padding: 15px;
   justify-content: center;
   align-items: center;
-  background-color:#DEEEFF ;
+  background-color: #deeeff;
   border-radius: 15px;
   border: 4px solid #000000;
   margin: 0% 30%;
 }
 
-label, input{
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+label,
+input {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 25px;
   color: #000000;
   margin: 10px;
 }
 
-button{
+button {
   margin: 30px 0px;
   font-size: 15px;
   padding: 10px;
   color: #ffffff;
-  background: #4A0E0A;
+  background: #4a0e0a;
   border-radius: 10px;
   width: 200px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
 </style>

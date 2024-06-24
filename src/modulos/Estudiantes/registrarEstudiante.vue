@@ -6,19 +6,19 @@
     <div class="container">
       <div class="datos">
         <label for="cedula">Cédula:</label>
-        <input type="text" v-model="cedula" id="cedula"/>
+        <input type="text" v-model="cedula" id="cedula" pattern="\d{10}" title="Ingrese los 10 dígitos de su cédula"/>
         
         <label for="nombre">Nombre:</label>
-        <input type="text" v-model="nombre" id="nombre"/>
+        <input type="text" v-model="nombre" id="nombre" pattern="[A-Za-z]" title="Ingrese su nombre"/>
         
         <label for="apellido">Apellido:</label>
-        <input type="text" v-model="apellido" id="apellido"/>
+        <input type="text" v-model="apellido" id="apellido" pattern="[A-Za-z]" title="Ingrese su apellido"/>
         
         <label for="correo">Correo:</label>
-        <input type="email" v-model="correo" id="correo"/>
+        <input type="email" v-model="correo" id="correo" pattern="^[a-zA-Z0-9._%+-]+@uce.edu.ec$" title="El correo debe ser de la UCE"/>
         
         <label for="carrera">Carrera:</label>
-        <input type="text" v-model="carrera" id="carrera"/>
+        <input type="text" v-model="carrera" id="carrera" pattern="[A-Za-z]" title="Ingrese su carrera"/>
       </div>
 
       <div class="boton">
@@ -35,7 +35,6 @@
 
 <script>
 import axios from "axios";
-import router from "@/router/router.js";
 
 export default {
   data() {
@@ -58,9 +57,22 @@ export default {
         this.errorMessage = 'Todos los campos son obligatorios';
         return;
       }
-      
-      if (!this.correo.endsWith('@uce.edu.ec')) {
-        this.errorMessage = 'El correo electrónico debe ser de la UCE';
+
+      // Validación cédula (10 números)
+      if (!(/^\d{10}$/.test(this.cedula))) {
+        this.errorMessage = 'La cédula debe contener exactamente 10 números.';
+        return;
+      }
+
+      // Validación correo electrónicoE)
+      if (!(/^[\w.-]+@uce\.edu\.ec$/.test(this.correo))) {
+        this.errorMessage = 'El correo electrónico debe ser de la UCE (ejemplo@uce.edu.ec).';
+        return;
+      }
+
+      // Validación para nombre, apellido y carrera (solo caracteres alfanuméricos)
+      if (!(/^[A-Za-z]+$/.test(this.nombre)) || !(/^[A-Za-z]+$/.test(this.apellido)) || !(/^[A-Za-z]+$/.test(this.carrera))) {
+        this.errorMessage = 'Ingrese correctamente su Nombre, Apellido y Carrera. Solo se permiten letras';
         return;
       }
 
