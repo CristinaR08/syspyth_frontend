@@ -1,6 +1,6 @@
 <template>
   <div class="title">
-    <h1>Bienvenido/a Ingeniero/a</h1>
+    <h1>Bienvenidos Docentes</h1>
   </div>
   <div class="indicacion">
     <h1>Por favor, ingrese sus credenciales</h1>
@@ -24,7 +24,7 @@
       <p v-if="contraseñaError" style="color: red">{{ contraseñaError }}</p>
     </div>
 
-    <button @click="ingresarAsistencia">INGRESAR</button>
+    <button @click="ingresarDocenteAdmin">INGRESAR</button>
   </div>
 </template>
 
@@ -41,50 +41,59 @@ export default {
     };
   },
   methods: {
+    async ingresarDocenteAdmin() {
+      this.cedulaError = "";
+      this.contraseñaError = "";
 
-    async ingresarAsistencia() {
       // Validar cédula y contraseña
-      if (!this.cedula || !this.confirmarContraseña) {
-        this.cedulaError = 'Debe ingresar la cédula';
-        this.contraseñaError = 'Debe ingresar la contraseña';
+      if (!this.cedula) {
+        this.cedulaError = "Debe ingresar la cédula";
+      }
+      if (!this.confirmarContraseña) {
+        this.contraseñaError = "Debe ingresar la contraseña";
+      }
+      if (this.cedulaError || this.contraseñaError) {
         return;
       }
 
       try {
         // Consultar si la cédula pertenece a un docente
-        const responseDocente = await axios.get(`http://127.0.0.1:5000/api/v1.0/docentes/consultar/${this.cedula}`);
-        if (responseDocente.data.message) {
-          this.cedulaError = responseDocente.data.message;
-          return;
-        }
-
-        // Consultar si la cédula pertenece a un administrador
-        const responseAdmin = await axios.get(`http://127.0.0.1:5000/api/v1.0/administradores/consultar/${this.cedula}`);
-        if (responseAdmin.data.message) {
-          this.cedulaError = responseAdmin.data.message;
-          return;
-        }
-        
-        // Redirigir según el tipo de usuario
-        if (responseDocente.data) {
+        const responseDocente = await axios.get(
+          `http://127.0.0.1:5000/api/v1.0/docentes/consultar/${this.cedula}`
+        );
+        if (responseDocente.status === 200 && responseDocente.data.id_docente) {
           // Redireccionar a la página de docente
-          this.$router.push('/asistenciaDocente')
-        } else if (responseAdmin.data) {
-          // Redireccionar a la página de administrador
-          this.$router.push('/principal_admin')
+          this.$router.push("/asistenciaDocente");
+          return;
         }
       } catch (error) {
-        console.error('Error al consultar el usuario:', error);
-        this.cedulaError = 'Error al consultar el usuario';
+        console.error("Error al consultar el docente:", error);
       }
-    }
+
+      try {
+        // Consultar si la cédula pertenece a un administrador
+        const responseAdmin = await axios.get(
+          `http://127.0.0.1:5000/api/v1.0/administrador/consultar/${this.cedula}`
+        );
+        if (
+          responseAdmin.status === 200 &&
+          responseAdmin.data.id_administrador
+        ) {
+          // Redireccionar a la página de administrador
+          this.$router.push("/principal_admin");
+          return;
+        }
+      } catch (error) {
+        console.error("Error al consultar el administrador:", error);
+      }
+
+      // Si no se encuentra ni como docente ni como administrador
+      this.cedulaError = "Cédula no encontrada en el sistema";
+    },
   },
 };
 </script>
 
-principal(){
-  this.$router.push({path:"/"})
-}
 
 <style scoped>
 .title {
@@ -131,9 +140,8 @@ button {
   font-size: 15px;
   padding: 10px;
   color: #ffffff;
-  background: #4a0e0a;
+  background: #4A0E0A;
   border-radius: 10px;
-  width: 200px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 </style>

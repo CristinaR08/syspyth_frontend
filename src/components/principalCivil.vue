@@ -2,8 +2,8 @@
   <div class="relative bg-gray-900">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     <div class="absolute inset-0 flex items-center justify-center z-10">
-      <h1 class="Bienvenida">Bienvenido/a</h1>
-      <h1 class="lab">Laboratorios de Ingeniería Civil</h1>
+      <h1 class="Bienvenida">Bienvenidos</h1>
+      <h1 class="lab">Laboratorios de Computación de Ingeniería Civil</h1>
     </div>
   </div>
 </template>

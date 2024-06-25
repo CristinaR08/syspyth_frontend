@@ -37,7 +37,7 @@ export default {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   text-align: right;
   width: 100%; 
-  text-shadow: 1px 1px 2px rgb(0, 0, 0); 
+  text-shadow: 2px 2px 2px rgb(0, 0, 0); 
 }
 
 #logoUCE {
