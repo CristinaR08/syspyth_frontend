@@ -8,87 +8,129 @@
 
   <div class="container">
     <div>
-      <label for="cedula">Cédula:</label>
+      <label
+        for="cedula"
+        pattern="\d{10}"
+        title="Ingrese los 10 dígitos de su cédula"
+        >Cédula:</label
+      >
       <input type="text" id="cedula" v-model="cedula" @input="validarCedula" />
       <p v-if="cedulaError" style="color: red">{{ cedulaError }}</p>
     </div>
-
-    <!-- Cuadro de texto para la contraseña -->
     <div>
-      <label for="confirmarContraseña">Contraseña:</label>
-      <input
-        type="password"
-        id="confirmarContraseña"
-        v-model="confirmarContraseña"
-      />
+      <label>Contraseña:</label>
+      <input type="password" id="contraseña" v-model="contraseña" />
       <p v-if="contraseñaError" style="color: red">{{ contraseñaError }}</p>
+      <!--Talvez una opcion de "mostrar contraseña" -->
     </div>
-
     <button @click="ingresarDocenteAdmin">INGRESAR</button>
+    <div>
+      <label for="admin">Administrador</label>
+      <input type="checkbox" id="admin" v-model="admin" />
+    </div>
   </div>
 </template>
 
   <script>
-import axios from "axios";
-
 export default {
+  props: {
+    admin: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
   data() {
     return {
       cedula: "",
-      confirmarContraseña: "",
+      contraseña: "",
       cedulaError: "",
       contraseñaError: "",
+      admin: false,
     };
   },
   methods: {
+    validarCedula() {
+      if (!/^\d{10}$/.test(this.cedula)) {
+        this.cedulaError = "La cédula debe contener exactamente 10 números.";
+      } else {
+        this.cedulaError = "";
+      }
+    },
     async ingresarDocenteAdmin() {
+      // Reiniciar errores
       this.cedulaError = "";
       this.contraseñaError = "";
 
-      // Validar cédula y contraseña
-      if (!this.cedula) {
-        this.cedulaError = "Debe ingresar la cédula";
-      }
-      if (!this.confirmarContraseña) {
-        this.contraseñaError = "Debe ingresar la contraseña";
-      }
-      if (this.cedulaError || this.contraseñaError) {
-        return;
-      }
-
+      // Verificar credenciales
       try {
-        // Consultar si la cédula pertenece a un docente
-        const responseDocente = await axios.get(
-          `http://127.0.0.1:5000/api/v1.0/docentes/consultar/${this.cedula}`
-        );
-        if (responseDocente.status === 200 && responseDocente.data.id_docente) {
-          // Redireccionar a la página de docente
-          this.$router.push("/asistenciaDocente");
-          return;
+        let response;
+        if (this.admin) {
+          response = await this.verificarAdmin(this.cedula, this.contraseña);
+          
+        } else {
+          response = await this.verificarDocente(this.cedula, this.contraseña);
+        }
+
+        this.$emit('isAdmin', this.admin)
+console.log(this.admin);
+
+        if (response.valido) {
+          if (this.admin) {
+            this.$router.push("/principal_admin");
+          } else {
+            this.$router.push("/asistenciaDocente");
+          }
+        } else {
+          if (this.admin) {
+            this.cedulaError =
+              "Cédula o contraseña incorrecta para administrador";
+          } else {
+            this.cedulaError = "Cédula o contraseña incorrecta para docente";
+          }
         }
       } catch (error) {
-        console.error("Error al consultar el docente:", error);
+        console.error(error);
+        this.cedulaError = "Error al verificar credenciales";
       }
-
+    },
+    async verificarAdmin(cedula, contraseña) {
+      // Lógica para verificar credenciales de administrador en la base de datos
       try {
-        // Consultar si la cédula pertenece a un administrador
-        const responseAdmin = await axios.get(
-          `http://127.0.0.1:5000/api/v1.0/administrador/consultar/${this.cedula}`
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/v1.0/administrador/autenticar",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cedula, contraseña }),
+          }
         );
-        if (
-          responseAdmin.status === 200 &&
-          responseAdmin.data.id_administrador
-        ) {
-          // Redireccionar a la página de administrador
-          this.$router.push("/principal_admin");
-          return;
-        }
+        return await response.json();
       } catch (error) {
-        console.error("Error al consultar el administrador:", error);
+        console.error(error);
+        throw new Error("Error al autenticar administrador");
       }
-
-      // Si no se encuentra ni como docente ni como administrador
-      this.cedulaError = "Cédula no encontrada en el sistema";
+    },
+    async verificarDocente(cedula, contraseña) {
+      // Lógica para verificar credenciales de docente en la base de datos
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/v1.0/docentes/autenticar",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ cedula, contraseña }),
+          }
+        );
+        return await response.json();
+      } catch (error) {
+        console.error(error);
+        throw new Error("Error al autenticar docente");
+      }
     },
   },
 };
@@ -140,7 +182,7 @@ button {
   font-size: 15px;
   padding: 10px;
   color: #ffffff;
-  background: #4A0E0A;
+  background: #4a0e0a;
   border-radius: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }

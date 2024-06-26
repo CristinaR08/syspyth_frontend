@@ -8,7 +8,12 @@
       @click="principal"
       style="cursor: pointer"
     />
-    <div class="options">
+    
+    <ingresar-docente @isAdmin = "actualizarEstado">
+      
+    </ingresar-docente>
+
+    <div v-if="!isAdmin" class="options">
       <button>
         <router-link class="router" to="/registrarEstudiante">
           Registro
@@ -30,14 +35,25 @@
 
 <script>
 import DateTime from "./DateTime.vue";
+import principalAdmin from "../modulos/Administrador/components/principalAdmin.vue"
 
 export default {
   name: "Header",
   components: {
     DateTime,
+    principalAdmin,
+  },
+
+  data(){
+    return{
+      isAdmin:false,
+    }
   },
 
   methods: {
+    actualizarEstado(nuevoEstado){
+      this.isAdmin = nuevoEstado
+    },
     principal() {
       this.$router.push({ path: "/" });
     },
