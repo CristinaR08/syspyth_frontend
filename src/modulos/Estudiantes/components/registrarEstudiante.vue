@@ -72,7 +72,7 @@ export default {
 
       // Validación para nombre, apellido y carrera (solo caracteres alfanuméricos)
       if (!(/^[A-Za-z]+$/.test(this.nombre)) || !(/^[A-Za-z]+$/.test(this.apellido)) || !(/^[A-Za-z]+$/.test(this.carrera))) {
-        this.errorMessage = 'Ingrese correctamente su Nombre, Apellido y Carrera. Solo se permiten letras';
+        this.errorMessage = 'Evite usar tildes. Solo letras';
         return;
       }
 

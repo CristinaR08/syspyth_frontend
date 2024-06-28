@@ -8,12 +8,7 @@
 
   <div class="container">
     <div>
-      <label
-        for="cedula"
-        pattern="\d{10}"
-        title="Ingrese los 10 dígitos de su cédula"
-        >Cédula:</label
-      >
+      <label for="cedula" pattern="\d{10}" title="Ingrese los 10 dígitos de su cédula">Cédula:</label>
       <input type="text" id="cedula" v-model="cedula" @input="validarCedula" />
       <p v-if="cedulaError" style="color: red">{{ cedulaError }}</p>
     </div>
@@ -31,7 +26,7 @@
   </div>
 </template>
 
-  <script>
+<script>
 export default {
   props: {
     admin: {
@@ -67,19 +62,25 @@ export default {
         let response;
         if (this.admin) {
           response = await this.verificarAdmin(this.cedula, this.contraseña);
-          
+
         } else {
           response = await this.verificarDocente(this.cedula, this.contraseña);
         }
 
         this.$emit('isAdmin', this.admin)
-console.log(this.admin);
+        console.log(this.admin);
 
         if (response.valido) {
           if (this.admin) {
             this.$router.push("/principal_admin");
+
           } else {
-            this.$router.push("/asistenciaDocente");
+            const nombre = response.nombre;
+            const apellido = response.apellido;
+            this.$router.push({
+              path: "/asistenciaDocente",
+              query: { nombre, apellido } // Pasar el nombre del docente
+            });
           }
         } else {
           if (this.admin) {
@@ -144,7 +145,8 @@ console.log(this.admin);
   align-items: center;
   height: 60px;
   justify-content: center;
-  margin: 30px 0px 40px 0px; /*top right bottom left*/
+  margin: 30px 0px 40px 0px;
+  /*top right bottom left*/
   background-color: #4a0e0a;
   box-shadow: 0 2px 4px rgb(0, 0, 2);
   padding: 0 20px;
