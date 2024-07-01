@@ -31,11 +31,11 @@
       <label for="sala">Sala:</label>
       <select id="sala" v-model="sala">
         <option disabled value="">Selecciona un aula</option>
-        <option value="Aula1">Aula 1</option>
-        <option value="Aula2">Aula 2</option>
-        <option value="Aula3">Aula 3</option>
-        <option value="AulaA">Aula A</option>
-        <option value="AulaB">Aula B</option>
+        <option value="Aula 1">Aula 1</option>
+        <option value="Aula 2">Aula 2</option>
+        <option value="Aula 3">Aula 3</option>
+        <option value="Aula A">Aula A</option>
+        <option value="Aula B">Aula B</option>
       </select>
     </div>
 
@@ -44,29 +44,29 @@
       <select id="numero_maquina" v-model="numeroMaquina">
         <option disabled value="">Selecciona un equipo</option>
         
-  <template v-if="sala === 'Aula1'">
+  <template v-if="sala === 'Aula 1'">
     <option value="101">Equipo 101</option>
-    <option v-for="i in 19" :key="'Aula1-' + i" :value="101 + i">Equipo {{ 101 + i }}</option>
+    <option v-for="i in 19" :key="'Aula 1-' + i" :value="101 + i">Equipo {{ 101 + i }}</option>
   </template>
 
-  <template v-if="sala === 'Aula2'">
+  <template v-if="sala === 'Aula 2'">
     <option value="201">Equipo 201</option>
-    <option v-for="i in 19" :key="'Aula2-' + i" :value="201 + i">Equipo {{ 201 + i }}</option>
+    <option v-for="i in 19" :key="'Aula 2-' + i" :value="201 + i">Equipo {{ 201 + i }}</option>
   </template>
 
-  <template v-if="sala === 'Aula3'">
+  <template v-if="sala === 'Aula 3'">
     <option value="301">Equipo 301</option>
-    <option v-for="i in 19" :key="'Aula3-' + i" :value="301 + i">Equipo {{ 301 + i }}</option>
+    <option v-for="i in 19" :key="'Aula 3-' + i" :value="301 + i">Equipo {{ 301 + i }}</option>
   </template>
 
-  <template v-if="sala === 'AulaA'">
+  <template v-if="sala === 'Aula A'">
   <option value="101">Equipo A01</option>
-  <option v-for="i in 29" :key="'AulaA-' + i" :value="'A' + formatNumber(i + 1)">Equipo {{ 'A' + formatNumber(i + 1) }}</option>
+  <option v-for="i in 29" :key="'Aula A-' + i" :value="'A' + formatNumber(i + 1)">Equipo {{ 'A' + formatNumber(i + 1) }}</option>
 </template>
 
-<template v-if="sala === 'AulaB'">
+<template v-if="sala === 'Aula B'">
   <option value="101">Equipo B01</option>
-  <option v-for="i in 23" :key="'AulaB-' + i" :value="'B' + formatNumber(i + 1)">Equipo {{ 'B' + formatNumber(i + 1) }}</option>
+  <option v-for="i in 23" :key="'Aula B-' + i" :value="'B' + formatNumber(i + 1)">Equipo {{ 'B' + formatNumber(i + 1) }}</option>
 </template>
       </select>
     </div>

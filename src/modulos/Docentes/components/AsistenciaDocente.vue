@@ -51,40 +51,10 @@
         </select>
 
         <label for="Inicio">Hora Inicio: </label>
-        <select id="Inicio" v-model="Inicio">
-          <option value="7am">07:00</option>
-          <option value="8am">08:00</option>
-          <option value="9am">09:00</option>
-          <option value="10am">10:00</option>
-          <option value="11am">11:00</option>
-          <option value="12pm">12:00</option>
-          <option value="13pm">13:00</option>
-          <option value="14pm">14:00</option>
-          <option value="15pm">15:00</option>
-          <option value="16pm">16:00</option>
-          <option value="17pm">17:00</option>
-          <option value="18pm">18:00</option>
-          <option value="19pm">19:00</option>
-          <option value="20pm">20:00</option>
-        </select>
+        <span>{{ Inicio }}</span>
 
         <label for="Fin">Hora Fin: </label>
-        <select id="Fin" v-model="Fin">
-          <option value="7am">07:00</option>
-          <option value="8am">08:00</option>
-          <option value="9am">09:00</option>
-          <option value="10am">10:00</option>
-          <option value="11am">11:00</option>
-          <option value="12pm">12:00</option>
-          <option value="13pm">13:00</option>
-          <option value="14pm">14:00</option>
-          <option value="15pm">15:00</option>
-          <option value="16pm">16:00</option>
-          <option value="17pm">17:00</option>
-          <option value="18pm">18:00</option>
-          <option value="19pm">19:00</option>
-          <option value="20pm">20:00</option>
-        </select>
+        <span>{{ Fin }}</span>
       </div>
       <div class="boton">
         <button @click="verEstudiantes">VER LISTA</button>
@@ -126,7 +96,7 @@ export default {
       materia: '',
       semestre: '',
       paralelo: '',
-      Inicio: '',
+      Inicio: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       Fin: '',
       mostrarLista: false,
       students: []
@@ -143,7 +113,12 @@ export default {
     },
     async obtenerEstudiantes() {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/listaEstudiantes?sala=${this.sala}&inicio=${this.Inicio}&fin=${this.Fin}`);
+        const startTime = this.Inicio;
+        const endTime = this.Fin; // Usa la hora fin calculada
+        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/listaEstudiantes?sala=${this.sala}&inicio=${startTime}&fin=${endTime}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         const data = await response.json();
         this.students = data;
         this.mostrarLista = true;
@@ -152,8 +127,26 @@ export default {
       }
     },
     registrarAsistencia() {
-      this.$router.push({ path: '/solicitudExitosa' })
+      this.$router.push({ path: '/solicitudExitosa' });
+    },
+    getCurrentTime() {
+      const now = new Date();
+      return now.toTimeString().substr(0, 5); // Obtener solo HH:MM
+    },
+    calculateEndTime(startTime) {
+      const [hours, minutes] = startTime.split(':').map(Number);
+      const endTime = new Date();
+      endTime.setHours(hours + 2, 0, 0, 0); // Sumar 2 horas y establecer minutos a 0
+      return endTime.toTimeString().substr(0, 5); // Obtener solo HH:MM
     }
+  },
+  watch: {
+    Inicio(newInicio) {
+      this.Fin = this.calculateEndTime(newInicio);
+    }
+  },
+  created() {
+    this.Fin = this.calculateEndTime(this.Inicio);
   }
 };
 </script>
