@@ -113,12 +113,7 @@ export default {
     },
     async obtenerEstudiantes() {
       try {
-        const startTime = this.Inicio;
-        const endTime = this.Fin; // Usa la hora fin calculada
-        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/listaEstudiantes?sala=${this.sala}&inicio=${startTime}&fin=${endTime}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/listaEstudiantes?sala=${this.sala}&inicio=${this.Inicio}&fin=${this.Fin}`);
         const data = await response.json();
         this.students = data;
         this.mostrarLista = true;
@@ -134,7 +129,7 @@ export default {
       return now.toTimeString().substr(0, 5); // Obtener solo HH:MM
     },
     calculateEndTime(startTime) {
-      const [hours, minutes] = startTime.split(':').map(Number);
+      const [hours] = startTime.split(':').map(Number);
       const endTime = new Date();
       endTime.setHours(hours + 2, 0, 0, 0); // Sumar 2 horas y establecer minutos a 0
       return endTime.toTimeString().substr(0, 5); // Obtener solo HH:MM

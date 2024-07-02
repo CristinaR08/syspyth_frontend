@@ -9,7 +9,7 @@
       style="cursor: pointer"
     />
     
-    <ingresar-docente @isAdmin = "actualizarEstado">
+    <ingresar-docente @obtenerEstado = "actualizarEstado">
       
     </ingresar-docente>
 
@@ -52,6 +52,7 @@ export default {
 
   methods: {
     actualizarEstado(nuevoEstado){
+      console.log("new estado", nuevoEstado);
       this.isAdmin = nuevoEstado
     },
     principal() {

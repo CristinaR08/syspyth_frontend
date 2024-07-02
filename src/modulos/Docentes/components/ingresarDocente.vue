@@ -67,19 +67,22 @@ export default {
           response = await this.verificarDocente(this.cedula, this.contraseña);
         }
 
-        this.$emit('isAdmin', this.admin)
-        console.log(this.admin);
 
         if (response.valido) {
-          if (this.admin) {
-            this.$router.push("/principal_admin");
 
+
+          if (this.admin) {
+            this.$emit('obtenerEstado', this.admin);
+            console.log(this.admin);
+            this.$nextTick(() => {
+              this.$router.push("/principal_admin");
+            });
           } else {
             const nombre = response.nombre;
             const apellido = response.apellido;
             this.$router.push({
               path: "/asistenciaDocente",
-              query: { nombre, apellido } // Pasar el nombre del docente
+              query: { nombre, apellido }
             });
           }
         } else {

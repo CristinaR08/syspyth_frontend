@@ -35,6 +35,10 @@ const routes = [
         path: "/principal_admin",
         component: () =>import('@/modulos/Administrador/components/principalAdmin') 
     },
+    {
+        path: "/registrarNuevo",
+        component: () =>import('@/modulos/Administrador/components/registrarNuevo')
+    },
     
 ];
 
