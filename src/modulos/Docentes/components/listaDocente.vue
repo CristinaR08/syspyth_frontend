@@ -1,27 +1,32 @@
 <template>
   <div>
-    <!-- Layout superior izquierdo -->
-    <div class="layout-superior-izquierdo">
-      <div>Docente</div>
-      <div>{{ nombreDocente }}</div>
-    </div>
-
-    <!-- Tabla -->
+    <h2 class="title">Lista de Docentes</h2>
+    <!--<div class="search-container">
+    <label for="search">Buscar por Cédula:</label>
+    <input type="text" v-model="cedula" id="search" />
+    <button @click="fetchEstudianteByCedula">Buscar</button>
+  </div>-->
     <table>
       <thead>
         <tr>
-          <th>Nómina</th>
+          <th>ID</th>
+          <th>Cédula</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
           <th>Correo</th>
-          <th>Equipo</th>
-          <th>Confirmar</th>
+          <th>Contraseña</th>
+          <th>Administrador</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(docente, index) in docentes" :key="index">
-          <td>{{ docente.nomina }}</td>
+        <tr v-for="docente in docentes" :key="docente.id">
+          <td>{{ docente.id }}</td>
+          <td>{{ docente.cedula }}</td>
+          <td>{{ docente.nombre }}</td>
+          <td>{{ docente.apellido }}</td>
           <td>{{ docente.correo }}</td>
-          <td>{{ docente.equipo }}</td>
-          <td><input type="checkbox" v-model="confirmacion[index]"></td>
+          <td>{{ docente.contraseña }}</td>
+          <td>{{ docente.administrador }}</td>
         </tr>
       </tbody>
     </table>
@@ -29,33 +34,85 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+  name: 'ListaDocentes',
   data() {
     return {
-      nombreDocente: 'John Doe', // Nombre del docente (simulado)
-      docentes: [ // Datos simulados de docentes
-        { nomina: '001', correo: 'docente1@example.com', equipo: 'Equipo 1' },
-        { nomina: '002', correo: 'docente2@example.com', equipo: 'Equipo 2' },
-        { nomina: '003', correo: 'docente3@example.com', equipo: 'Equipo 3' }
-        // Puedes agregar más datos simulados si lo deseas
-      ],
-      confirmacion: [] // Array para almacenar las confirmaciones de asistencia
+      docentes: [],
+      cedula: ''
     };
   },
   created() {
-    // Inicializar el array de confirmaciones con el mismo tamaño que el array de docentes
-    this.confirmacion = new Array(this.docentes.length).fill(false);
+    this.fetchDocentes();
+  },
+  methods: {
+    async fetchDocentes() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/v1.0/docentes/lista');
+        this.docentes = response.data;
+      } catch (error) {
+        console.error('Mo hay docentes:', error);
+      }
+    },
+    async fetchDocentesByCedula() {
+      if (this.cedula) {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
+          this.docentes = [response.data];
+        } catch (error) {
+          console.error('No se encontró al docente con la cédula ingresada:', error);
+          this.docentes = [];
+        }
+      } else {
+        this.fetchDocentes();
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
-.layout-superior-izquierdo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 10px;
-  background-color: lightgray;
-  border-bottom-right-radius: 10px;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.search-container {
+  margin-bottom: 20px;
+}
+
+button {
+  margin-left: 10px;
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  justify-content: center;
+  margin: 30px 0px 40px 0px;
+  /*top right bottom left*/
+  background-color: #4a0e0a;
+  box-shadow: 0 2px 4px rgb(0, 0, 2);
+  padding: 0 20px;
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 </style>

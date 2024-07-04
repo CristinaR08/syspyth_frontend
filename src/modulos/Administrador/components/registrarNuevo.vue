@@ -23,6 +23,7 @@
       <div class="cargo">
         <label for="cargo">Cargo:</label>
         <select id="cargo" v-model="cargo">
+          <option disabled value="">Seleccione el cargo</option>
           <option value="docente">Docente</option>
           <option value="admin">Administrador</option>
         </select>
@@ -52,7 +53,7 @@ export default {
       apellido: '',
       correo: '',
       contraseña: '',
-      cargo: 'docente', // Valor por defecto
+      cargo: '', // Valor por defecto
       errorMessage: ''
     };
   },
@@ -181,6 +182,7 @@ input {
 
 select {
   height: 25px;
+  width: 150px;
 }
 
 label {

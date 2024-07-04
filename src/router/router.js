@@ -22,7 +22,6 @@ const routes = [
         path: "/ingresarEstudiante",
         component: () => import ('@/modulos/Estudiantes/components/ingresarEstudiante')
     },
-
     {
         path: "/ingresarDocente",
         component: () => import ('@/modulos/Docentes/components/ingresarDocente')
@@ -39,6 +38,22 @@ const routes = [
         path: "/registrarNuevo",
         component: () =>import('@/modulos/Administrador/components/registrarNuevo')
     },
+    {
+        path: "/ver_listas",
+        component: () =>import('@/modulos/Administrador/components/verListas')
+    },
+    {
+        path: "/ver_listas/docentes",
+        component: () =>import('@/modulos/Docentes/components/listaDocente')
+    },
+    {
+        path: "/ver_listas/estudiantes",
+        component: () =>import('@/modulos/Estudiantes/components/listaEstudiante')
+    },
+    {
+        path: "/ver_listas/administradores",
+        component: () =>import('@/modulos/Administrador/components/listaAdministradores')
+    }
     
 ];
 
