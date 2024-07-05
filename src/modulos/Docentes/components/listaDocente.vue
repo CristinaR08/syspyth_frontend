@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h2 class="title">Lista de Docentes</h2>
-    <!--<div class="search-container">
-    <label for="search">Buscar por Cédula:</label>
+    <div class="search-container">
+    <label for="search">Buscar Docente:</label>
     <input type="text" v-model="cedula" id="search" />
     <button @click="fetchEstudianteByCedula">Buscar</button>
-  </div>-->
+  </div>
     <table>
       <thead>
         <tr>
@@ -74,45 +73,86 @@ export default {
 </script>
 
 <style scoped>
-table {
+.table-container {
+  width: 70%;
+  margin: 0 auto; 
+  overflow-x: auto;
+}
+
+.table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
+  background-color: #000000; /*Fondo oscuro*/
 }
 
 th,
 td {
-  border: 1px solid #ddd;
+  border: 1px solid #ffffff21;
   padding: 8px;
   text-align: left;
+
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: #4A0A3B; /*encabezado*/
   font-weight: bold;
+  font-size: 25px;
+  color: #ffffff; 
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+tr {
+  font-size: 22px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #edf7ed; /*filas impares*/
+  color: #000000; 
+}
+
+tbody tr:nth-child(even) {
+  background-color: #F4C5E9; /*filas pares*/
+  color: #000000; 
 }
 
 .search-container {
-  margin-bottom: 20px;
+  margin: 40px;
 }
 
 button {
   margin-left: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  border-radius: 15px;
+  width: 70px;
+  height: 40px;
+  font-size: 20px;
 }
 
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  justify-content: center;
-  margin: 30px 0px 40px 0px;
-  /*top right bottom left*/
-  background-color: #4a0e0a;
-  box-shadow: 0 2px 4px rgb(0, 0, 2);
-  padding: 0 20px;
-  color: rgb(255, 255, 255);
-  font-size: 20px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+.buscar {
+  color: black;
+  font-size: 25px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
+
+input {
+  margin-left: 10px;
+  border-radius: 5px;
+  height: 25px;
+  background-color: #ffffff31;
+}
+th{
+  text-align: center;
+}
+#search {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #333; /* Color for input text */
+    font-size: 20px;
+  }
+
+  #search::placeholder {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #999; /* Color for placeholder text */
+  }
+
 </style>

@@ -1,23 +1,22 @@
 <template>
-    <div>
-    <h2 class="title" >Lista de Estudiantes</h2>
     <div class="search-container">
-      <label class="buscar" for="search">Buscar por Cédula:  </label>
-      <input type="text" v-model="cedula" id="search" />
-      <button @click="fetchEstudianteByCedula">Buscar</button>
+      <label class="buscar" for="search">Buscar Estudiante: </label>
+      <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
+      <button @click="buscarCedula">Buscar</button>
     </div>
-    <table>
+    <div class="table-container">
+    <table class="table table-dark table-striped-columns">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Cédula</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Correo</th>
+          <th scope="col">ID</th>
+          <th scope="col">Cédula</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Correo</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="student in students" :key="student.id">
+      <tbody class="divisores">
+        <tr v-for="student in students" :key="student.id" class="table-active">
           <td>{{ student.id }}</td>
           <td>{{ student.cedula }}</td>
           <td>{{ student.nombre }}</td>
@@ -34,10 +33,12 @@ import axios from 'axios';
 
 export default {
   name: 'ListaEstudiantes',
+
   data() {
     return {
       students: [],
-      cedula: ''
+      cedula: '',
+      first: 0
     };
   },
   created() {
@@ -52,7 +53,7 @@ export default {
         console.error('No existen estudiantes', error);
       }
     },
-    async fetchEstudianteByCedula() {
+    async buscarCedula() {
       if (this.cedula) {
         try {
           const response = await axios.get(`http://localhost:5000/api/v1.0/estudiantes/consultar/${this.cedula}`);
@@ -64,62 +65,92 @@ export default {
       } else {
         this.fetchEstudiantes();
       }
-    }
+    },
   }
 };
 </script>
 
 <style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
+.table-container {
+  width: 70%;
+  margin: 0 auto; 
+  overflow-x: auto;
 }
 
-th, td {
-  border: 1px solid #ddd;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #000000; /*Fondo oscuro*/
+}
+
+th,
+td {
+  border: 1px solid #ffffff21;
   padding: 8px;
   text-align: left;
+
 }
 
 th {
-  background-color: #f2f2f2;
+  background-color: #4A0A3B; /*encabezado*/
   font-weight: bold;
+  font-size: 25px;
+  color: #ffffff; 
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+tr {
+  font-size: 22px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #edf7ed; /*filas impares*/
+  color: #000000; 
+}
+
+tbody tr:nth-child(even) {
+  background-color: #F4C5E9; /*filas pares*/
+  color: #000000; 
 }
 
 .search-container {
-  margin-bottom: 30px;
+  margin: 40px;
 }
 
 button {
   margin-left: 10px;
-}
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  justify-content: center;
-  margin: 30px 0px 40px 0px;
-  /*top right bottom left*/
-  background-color: #4a0e0a;
-  box-shadow: 0 2px 4px rgb(0, 0, 2);
-  padding: 0 20px;
-  color: rgb(255, 255, 255);
-  font-size: 30px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  border-radius: 15px;
+  width: 70px;
+  height: 40px;
+  font-size: 20px;
 }
 
-.buscar{
+.buscar {
   color: black;
-  font-size: 20px;
+  font-size: 25px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-input{
+input {
   margin-left: 10px;
   border-radius: 5px;
+  height: 25px;
   background-color: #ffffff31;
 }
+th{
+  text-align: center;
+}
+#search {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #333; /* Color for input text */
+    font-size: 20px;
+  }
+
+  #search::placeholder {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #999; /* Color for placeholder text */
+  }
 
 </style>

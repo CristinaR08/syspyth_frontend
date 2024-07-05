@@ -16,7 +16,7 @@ export default {
 
 <style scoped>
 .container {
-    margin-top: 20px;
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
