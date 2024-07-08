@@ -8,10 +8,6 @@
       @click="principal"
       style="cursor: pointer"
     />
-    
-    <ingresar-docente @obtenerEstado = "actualizarEstado">
-      
-    </ingresar-docente>
 
     <div v-if="!isAdmin" class="options">
       <button>
@@ -28,6 +24,26 @@
         <router-link class="router" to="/ingresarDocente">
           Docente
         </router-link>
+      </button>
+    </div>
+    <div v-if="isAdmin" class="options">
+      <button>
+        <router-link class="router" to="/registrarNuevo">
+          Nuevo
+        </router-link>
+      </button>
+      <button>
+        <router-link class="router" to="/ver_listas">
+          Listas
+        </router-link>
+      </button>
+      <button>
+        <router-link class="router" to="/">
+          Asistencia
+        </router-link>
+      </button>
+      <button class="salir" @click="logout">
+        LogOut
       </button>
     </div>
   </div>
@@ -51,13 +67,31 @@ export default {
   },
 
   methods: {
-    actualizarEstado(nuevoEstado){
-      console.log("new estado", nuevoEstado);
-      this.isAdmin = nuevoEstado
+    actualizarEstado(){
+      this.isAdmin = sessionStorage.getItem("administrador");
+      console.log(this.isAdmin);
+      console.log("Actualizar");
     },
     principal() {
       this.$router.push({ path: "/" });
+      this.isAdmin = false;
+      sessionStorage.removeItem("administrador");
     },
+    logout() {
+      sessionStorage.removeItem("administrador");
+      this.isAdmin = false;
+      this.$router.push({ path: "/" });
+    },
+  },
+
+  mounted(){
+    this.actualizarEstado()
+  },
+
+  watch: {
+    '$route'(to, from) {
+      this.actualizarEstado();
+    }
   },
 };
 </script>
@@ -109,6 +143,16 @@ button:hover {
 }
 
 .router:hover{
+  color: black;
+}
+
+
+ .salir{
+  color: rgb(191, 6, 6);
+}
+
+.salir:hover {
+  background-color: #e70303b8;
   color: black;
 }
 

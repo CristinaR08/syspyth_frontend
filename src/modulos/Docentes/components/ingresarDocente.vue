@@ -16,7 +16,6 @@
       <label>Contraseña:</label>
       <input type="password" id="contraseña" v-model="contraseña" />
       <p v-if="contraseñaError" style="color: red">{{ contraseñaError }}</p>
-      <!--Talvez una opcion de "mostrar contraseña" -->
     </div>
     <button @click="ingresarDocenteAdmin">INGRESAR</button>
     <div>
@@ -62,21 +61,15 @@ export default {
         let response;
         if (this.admin) {
           response = await this.verificarAdmin(this.cedula, this.contraseña);
-
+          //sessionStorage.setItem("administrador", this.admin)
         } else {
           response = await this.verificarDocente(this.cedula, this.contraseña);
         }
-
-
         if (response.valido) {
-
-
           if (this.admin) {
-            this.$emit('obtenerEstado', this.admin);
+            sessionStorage.setItem("administrador", this.admin);
             console.log(this.admin);
-            this.$nextTick(() => {
-              this.$router.push("/principal_admin");
-            });
+            this.$router.push("/principal_admin");
           } else {
             const nombre = response.nombre;
             const apellido = response.apellido;
