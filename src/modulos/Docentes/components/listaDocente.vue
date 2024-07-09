@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="search-container">
+      <div class="title">
+    <h1>Docentes Registrados</h1>
+  </div>
     <label for="search">Buscar Docente:</label>
     <input type="text" v-model="cedula" id="search" />
     <button @click="fetchEstudianteByCedula">Buscar</button>
@@ -73,6 +76,21 @@ export default {
 </script>
 
 <style scoped>
+.title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px; 
+  justify-content: center;
+  margin: 35px 0px 40px 0px; /*top right bottom left*/ 
+  background-color: #034b1650;
+  box-shadow: 0 2px 4px rgb(0, 0, 2); 
+  padding: 0 20px; 
+  color: rgb(0, 0, 0);
+  font-size: 15px;
+  font-family:'Courier New', Courier, monospace;
+}
+
 .table-container {
   width: 70%;
   margin: 0 auto; 

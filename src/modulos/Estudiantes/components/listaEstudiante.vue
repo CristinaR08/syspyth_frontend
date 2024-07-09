@@ -1,10 +1,13 @@
 <template>
-    <div class="search-container">
-      <label class="buscar" for="search">Buscar Estudiante: </label>
-      <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
-      <button @click="buscarCedula">Buscar</button>
-    </div>
-    <div class="table-container">
+  <div class="title">
+    <h1>Estudiantes Registrados</h1>
+  </div>
+  <div class="search-container">
+    <label class="buscar" for="search">Buscar Estudiante: </label>
+    <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
+    <button @click="buscarCedula">Buscar</button>
+  </div>
+  <div class="table-container">
     <table class="table table-dark table-striped-columns">
       <thead>
         <tr>
@@ -32,7 +35,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'ListaEstudiantes',
+  name: 'listaEstudiantes',
 
   data() {
     return {
@@ -71,16 +74,32 @@ export default {
 </script>
 
 <style scoped>
+.title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px; 
+  justify-content: center;
+  margin: 35px 0px 40px 0px; /*top right bottom left*/ 
+  background-color: #034b1650;
+  box-shadow: 0 2px 4px rgb(0, 0, 2); 
+  padding: 0 20px; 
+  color: rgb(0, 0, 0);
+  font-size: 15px;
+  font-family:'Courier New', Courier, monospace;
+}
+
 .table-container {
   width: 70%;
-  margin: 0 auto; 
+  margin: 0 auto;
   overflow-x: auto;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #000000; /*Fondo oscuro*/
+  background-color: #000000;
+  /*Fondo oscuro*/
 }
 
 th,
@@ -92,10 +111,11 @@ td {
 }
 
 th {
-  background-color: #4A0A3B; /*encabezado*/
+  background-color: #0c3708;
+  /*encabezado*/
   font-weight: bold;
   font-size: 25px;
-  color: #ffffff; 
+  color: #ffffff;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
@@ -105,13 +125,15 @@ tr {
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #edf7ed; /*filas impares*/
-  color: #000000; 
+  background-color: #edf7ed;
+  /*filas impares*/
+  color: #000000;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #F4C5E9; /*filas pares*/
-  color: #000000; 
+  background-color: #d0f4c5;
+  /*filas pares*/
+  color: #000000;
 }
 
 .search-container {
@@ -139,18 +161,21 @@ input {
   height: 25px;
   background-color: #ffffff31;
 }
-th{
+
+th {
   text-align: center;
 }
+
 #search {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #333; /* Color for input text */
-    font-size: 20px;
-  }
+  color: #333;
+  /* Color for input text */
+  font-size: 20px;
+}
 
-  #search::placeholder {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #999; /* Color for placeholder text */
-  }
-
+#search::placeholder {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #999;
+  /* Color for placeholder text */
+}
 </style>

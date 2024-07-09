@@ -1,50 +1,45 @@
 <template>
   <div class="header-container">
     <DateTime />
-    <img
-      id="logoUCE"
-      alt="Logo"
-      src="@/assets/logoUCE.png"
-      @click="principal"
-      style="cursor: pointer"
-    />
-
-    <div v-if="!isAdmin" class="options">
-      <button>
-        <router-link class="router" to="/registrarEstudiante">
-          Registro
-        </router-link>
-      </button>
-      <button>
-        <router-link class="router" to="/ingresarEstudiante">
-          Estudiante
-        </router-link>
-      </button>
-      <button>
-        <router-link class="router" to="/ingresarDocente">
-          Docente
-        </router-link>
-      </button>
-    </div>
-    <div v-if="isAdmin" class="options">
-      <button>
-        <router-link class="router" to="/registrarNuevo">
-          Nuevo
-        </router-link>
-      </button>
-      <button>
-        <router-link class="router" to="/ver_listas">
-          Listas
-        </router-link>
-      </button>
-      <button>
-        <router-link class="router" to="/">
-          Asistencia
-        </router-link>
-      </button>
-      <button class="salir" @click="logout">
-        LogOut
-      </button>
+    <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" @click="principal" style="cursor: pointer" />
+    <div class="Opciones">
+      <div v-if="!isAdmin" class="options">
+        <button>
+          <router-link class="router" to="/registrarEstudiante">
+            Registro
+          </router-link>
+        </button>
+        <button>
+          <router-link class="router" to="/ingresarEstudiante">
+            Estudiante
+          </router-link>
+        </button>
+        <button>
+          <router-link class="router" to="/ingresarDocente">
+            Docente
+          </router-link>
+        </button>
+      </div>
+      <div v-if="isAdmin" class="options">
+        <button>
+          <router-link class="router" to="/registrarNuevo">
+            Nuevo
+          </router-link>
+        </button>
+        <button>
+          <router-link class="router" to="/ver_listas">
+            Listas
+          </router-link>
+        </button>
+        <button>
+          <router-link class="router" to="/">
+            Asistencia
+          </router-link>
+        </button>
+        <button class="salir" @click="logout">
+          LogOut
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -60,14 +55,14 @@ export default {
     principalAdmin,
   },
 
-  data(){
-    return{
-      isAdmin:false,
+  data() {
+    return {
+      isAdmin: false,
     }
   },
 
   methods: {
-    actualizarEstado(){
+    actualizarEstado() {
       this.isAdmin = sessionStorage.getItem("administrador");
       console.log(this.isAdmin);
       console.log("Actualizar");
@@ -84,7 +79,7 @@ export default {
     },
   },
 
-  mounted(){
+  mounted() {
     this.actualizarEstado()
   },
 
@@ -112,9 +107,19 @@ export default {
   padding: 0 20px;
 }
 
-.left-options {
+.options {
   display: flex;
   align-items: center;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.options button {
+  margin-right: 10px; 
+  margin-bottom: 10px; 
 }
 
 #logoUCE {
@@ -139,21 +144,20 @@ button {
 
 button:hover {
   background-color: #1a72c9;
-  
+
 }
 
-.router:hover{
+.router:hover {
   color: black;
 }
 
 
- .salir{
+.salir {
   color: rgb(191, 6, 6);
 }
 
 .salir:hover {
-  background-color: #e70303b8;
+  background-color: #c20f03;
   color: black;
 }
-
 </style>

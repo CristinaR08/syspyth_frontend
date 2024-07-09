@@ -28,16 +28,15 @@
           <option value="admin">Administrador</option>
         </select>
       </div>
-
       <div class="boton">
         <button @click="saveUsuario">GUARDAR</button>
       </div>
-
       <!-- Mensaje de error -->
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
     </div>
+    <button class="volver">Volver</button>
   </div>
 </template>
 
@@ -161,6 +160,15 @@ export default {
   align-items: center;
 }
 
+.volver{
+  margin-right: 80%;
+  border-radius: 10px;
+  background: #c2b9b8;
+  color: #000000;
+  font-weight: bold;
+  width: 100px;
+}
+
 button {
   margin: 30px 0px;
   font-size: 15px;
@@ -170,6 +178,7 @@ button {
   border-radius: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
 
 input,
 label {
