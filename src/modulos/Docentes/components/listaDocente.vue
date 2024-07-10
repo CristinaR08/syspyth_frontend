@@ -1,37 +1,39 @@
 <template>
   <div>
+    <div class="title">
+      <h1>Docentes Registrados</h1>
+    </div>
     <div class="search-container">
-      <div class="title">
-    <h1>Docentes Registrados</h1>
-  </div>
-    <label for="search">Buscar Docente:</label>
-    <input type="text" v-model="cedula" id="search" />
-    <button @click="fetchEstudianteByCedula">Buscar</button>
-  </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Cédula</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Correo</th>
-          <th>Contraseña</th>
-          <th>Administrador</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="docente in docentes" :key="docente.id">
-          <td>{{ docente.id }}</td>
-          <td>{{ docente.cedula }}</td>
-          <td>{{ docente.nombre }}</td>
-          <td>{{ docente.apellido }}</td>
-          <td>{{ docente.correo }}</td>
-          <td>{{ docente.contraseña }}</td>
-          <td>{{ docente.administrador }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <label class="buscar" for="search">Buscar Docente:</label>
+      <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
+      <button @click="buscarDocente">Buscar</button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped-columns">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Cédula</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Contraseña</th>
+            <th scope="col">Administrador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="docente in docentes" :key="docente.id">
+            <td>{{ docente.id }}</td>
+            <td>{{ docente.cedula }}</td>
+            <td>{{ docente.nombre }}</td>
+            <td>{{ docente.apellido }}</td>
+            <td>{{ docente.correo }}</td>
+            <td>{{ docente.contraseña }}</td>
+            <td>{{ docente.administrador }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -58,7 +60,7 @@ export default {
         console.error('Mo hay docentes:', error);
       }
     },
-    async fetchDocentesByCedula() {
+    async buscarCedula() {
       if (this.cedula) {
         try {
           const response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
@@ -76,6 +78,7 @@ export default {
 </script>
 
 <style scoped>
+
 .title{
   display: flex;
   justify-content: space-between;
@@ -93,45 +96,48 @@ export default {
 
 .table-container {
   width: 70%;
-  margin: 0 auto; 
+  margin: 20 auto;
   overflow-x: auto;
 }
 
 .table {
-  width: 100%;
+  width: 70%;
   border-collapse: collapse;
   background-color: #000000; /*Fondo oscuro*/
-}
-
-th,
-td {
-  border: 1px solid #ffffff21;
-  padding: 8px;
-  text-align: left;
-
+  margin: 0 auto;
 }
 
 th {
-  background-color: #4A0A3B; /*encabezado*/
+  background-color: #0c3708;
+  /*encabezado*/
   font-weight: bold;
+  height: 40px;
   font-size: 25px;
-  color: #ffffff; 
+  color: #ffffff;
+  
   font-family: Georgia, 'Times New Roman', Times, serif;
+  
+}
+
+td{
+  height: 30px;
 }
 
 tr {
-  font-size: 22px;
+  font-size: 20px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #edf7ed; /*filas impares*/
-  color: #000000; 
+  background-color: #edf7ed;
+  /*filas impares*/
+  color: #000000;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #F4C5E9; /*filas pares*/
-  color: #000000; 
+  background-color: #d0f4c5;
+  /*filas pares*/
+  color: #000000;
 }
 
 .search-container {
@@ -159,18 +165,31 @@ input {
   height: 25px;
   background-color: #ffffff31;
 }
-th{
-  text-align: center;
-}
+
 #search {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #333; /* Color for input text */
-    font-size: 20px;
-  }
+  color: #333;
+  /* Color for input text */
+  font-size: 20px;
+}
 
-  #search::placeholder {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #999; /* Color for placeholder text */
-  }
+#search::placeholder {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #999;
+  /* Color for placeholder text */
+}
 
+@media(max-width:880px){
+  .table{
+    width: 95%;
+  }
+  th{
+    font-size: 18px;
+    text-align: center;
+  }
+  td{
+    font-size: 15px;
+    text-align: center;
+  }
+}
 </style>

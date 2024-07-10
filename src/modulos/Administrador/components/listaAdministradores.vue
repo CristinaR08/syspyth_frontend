@@ -1,21 +1,24 @@
 <template>
     <div>
-        <h2 class="title">Administradores</h2>
+        <div class="title">
+            <h2>Administradores</h2>
+        </div>
         <!--<div class="search-container">
       <label for="search">Buscar por Cédula:</label>
       <input type="text" v-model="cedula" id="search" />
       <button @click="fetchEstudianteByCedula">Buscar</button>
     </div>-->
-        <table>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped-columns">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Cédula</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Correo</th>
-                    <th>Contraseña</th>
-                    <th>Administrador</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Cédula</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Contraseña</th>
+                    <th scope="col">Administrador</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +34,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </template>
 
 <script>
@@ -74,46 +78,121 @@ export default {
 </script>
 
 <style scoped>
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    justify-content: center;
+    margin: 35px 0px 40px 0px;
+    /*top right bottom left*/
+    background-color: #034b1650;
+    box-shadow: 0 2px 4px rgb(0, 0, 2);
+    padding: 0 20px;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+.table-container {
+    width: 70%;
+    margin: 20 auto;
+    overflow-x: auto;
+}
+
+.table {
+    width: 70%;
+    border-collapse: collapse;
+    background-color: #000000;
+    /*Fondo oscuro*/
+    margin: 0 auto;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #0c3708;
+    /*encabezado*/
     font-weight: bold;
+    height: 40px;
+    font-size: 25px;
+    color: #ffffff;
+
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+td {
+    height: 30px;
+}
+
+tr {
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #edf7ed;
+    /*filas impares*/
+    color: #000000;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #d0f4c5;
+    /*filas pares*/
+    color: #000000;
 }
 
 .search-container {
-    margin-bottom: 20px;
+    margin: 40px;
 }
 
 button {
     margin-left: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border-radius: 15px;
+    width: 70px;
+    height: 40px;
+    font-size: 20px;
 }
 
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 60px;
-  justify-content: center;
-  margin: 30px 0px 40px 0px;
-  /*top right bottom left*/
-  background-color: #4a0e0a;
-  box-shadow: 0 2px 4px rgb(0, 0, 2);
-  padding: 0 20px;
-  color: rgb(255, 255, 255);
-  font-size: 30px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+.buscar {
+    color: black;
+    font-size: 25px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+input {
+    margin-left: 10px;
+    border-radius: 5px;
+    height: 25px;
+    background-color: #ffffff31;
+}
+
+#search {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #333;
+    /* Color for input text */
+    font-size: 20px;
+}
+
+#search::placeholder {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #999;
+    /* Color for placeholder text */
+}
+
+@media(max-width:880px) {
+    .table {
+        width: 95%;
+    }
+
+    th {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    td {
+        font-size: 15px;
+        text-align: center;
+    }
+}
 </style>

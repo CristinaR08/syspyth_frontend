@@ -107,20 +107,25 @@ export default {
   padding: 0 20px;
 }
 
-.options {
+.Opciones {
   display: flex;
   align-items: center;
 }
 
+.options {
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: auto; 
+}
+
 .button-row {
   display: flex;
-  flex-wrap: wrap;
 }
 
 .options button {
-  margin-right: 10px; 
-  margin-bottom: 10px; 
+  margin: 5px; 
 }
+
 
 #logoUCE {
   height: 90px;
@@ -131,7 +136,7 @@ export default {
 }
 
 button {
-  padding: 10px 30px;
+  padding: 10px 20px;
   font-size: 16px;
   border: none;
   border-radius: 10px;
@@ -139,7 +144,6 @@ button {
   font-weight: bolder;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   background-color: #0a2b4b;
-  margin: 0px 10px;
 }
 
 button:hover {
@@ -160,4 +164,5 @@ button:hover {
   background-color: #c20f03;
   color: black;
 }
+
 </style>

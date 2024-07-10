@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="title">
     <h1>Estudiantes Registrados</h1>
   </div>
@@ -7,7 +8,7 @@
     <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
     <button @click="buscarCedula">Buscar</button>
   </div>
-  <div class="table-container">
+  <div class="table-responsive">
     <table class="table table-dark table-striped-columns">
       <thead>
         <tr>
@@ -18,8 +19,8 @@
           <th scope="col">Correo</th>
         </tr>
       </thead>
-      <tbody class="divisores">
-        <tr v-for="student in students" :key="student.id" class="table-active">
+      <tbody>
+        <tr v-for="student in students" :key="student.id">
           <td>{{ student.id }}</td>
           <td>{{ student.cedula }}</td>
           <td>{{ student.nombre }}</td>
@@ -29,10 +30,12 @@
       </tbody>
     </table>
   </div>
+</div>
 </template>
 
 <script>
 import axios from 'axios';
+
 
 export default {
   name: 'listaEstudiantes',
@@ -41,7 +44,6 @@ export default {
     return {
       students: [],
       cedula: '',
-      first: 0
     };
   },
   created() {
@@ -74,6 +76,8 @@ export default {
 </script>
 
 <style scoped>
+/*@import "~bootstrap/dist/css/bootstrap.min.css";*/
+
 .title{
   display: flex;
   justify-content: space-between;
@@ -91,36 +95,35 @@ export default {
 
 .table-container {
   width: 70%;
-  margin: 0 auto;
+  margin: 20 auto;
   overflow-x: auto;
 }
 
 .table {
-  width: 100%;
+  width: 70%;
   border-collapse: collapse;
-  background-color: #000000;
-  /*Fondo oscuro*/
-}
-
-th,
-td {
-  border: 1px solid #ffffff21;
-  padding: 8px;
-  text-align: left;
-
+  background-color: #000000; /*Fondo oscuro*/
+  margin: 0 auto;
 }
 
 th {
   background-color: #0c3708;
   /*encabezado*/
   font-weight: bold;
+  height: 40px;
   font-size: 25px;
   color: #ffffff;
+  
   font-family: Georgia, 'Times New Roman', Times, serif;
+  
+}
+
+td{
+  height: 30px;
 }
 
 tr {
-  font-size: 22px;
+  font-size: 20px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
@@ -162,10 +165,6 @@ input {
   background-color: #ffffff31;
 }
 
-th {
-  text-align: center;
-}
-
 #search {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #333;
@@ -178,4 +177,11 @@ th {
   color: #999;
   /* Color for placeholder text */
 }
+
+@media(max-width:880px){
+  .table{
+    width: 90%;
+  }
+}
+
 </style>
