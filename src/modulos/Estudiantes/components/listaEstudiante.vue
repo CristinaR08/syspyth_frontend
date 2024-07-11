@@ -113,7 +113,6 @@ th {
   height: 40px;
   font-size: 25px;
   color: #ffffff;
-  
   font-family: Georgia, 'Times New Roman', Times, serif;
   
 }

@@ -227,6 +227,7 @@ export default {
   border-radius: 15px;
   border: 4px solid #000000;
   margin: 0% 30%;
+  margin-bottom: 100px;
 }
 
 .registrar{

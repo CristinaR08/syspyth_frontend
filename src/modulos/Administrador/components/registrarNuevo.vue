@@ -36,7 +36,11 @@
         {{ errorMessage }}
       </div>
     </div>
-    <button class="volver">Volver</button>
+    <button class="volver">
+          <router-link class="router" to="/principal_admin">
+            Volver
+          </router-link>
+        </button>
   </div>
 </template>
 
@@ -57,6 +61,9 @@ export default {
     };
   },
   methods: {
+    volver(){
+      this.$router.push({ path: "/principal_admin"});
+    },
   async saveUsuario() {
     // Validaciones antes de enviar la solicitud
     if (!this.cedula || !this.nombre || !this.apellido || !this.correo || !this.contraseña) {
@@ -161,15 +168,17 @@ export default {
 }
 
 .volver{
-  margin-right: 80%;
+  margin: 20px; 
+  margin-right: 70%;
   border-radius: 10px;
   background: #c2b9b8;
   color: #000000;
   font-weight: bold;
-  width: 100px;
+  height: 30px;
+  width: 80px;
 }
 
-button {
+.boton button {
   margin: 30px 0px;
   font-size: 15px;
   padding: 10px;
@@ -199,4 +208,16 @@ label {
   font-size: 25px;
   color: #000000;
 }
+
+.router {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+@media(max-width:880px){
+  .container{
+    width: 60%;
+  }
+}
+
 </style>
