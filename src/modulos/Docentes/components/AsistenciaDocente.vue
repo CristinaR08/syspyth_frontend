@@ -89,6 +89,8 @@
 <script>
 export default {
   data() {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
     return {
       nombre: this.$route.query.nombre || '',
       apellido: this.$route.query.apellido || '',
@@ -96,7 +98,7 @@ export default {
       materia: '',
       semestre: '',
       paralelo: '',
-      Inicio: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      Inicio: now.toTimeString().substr(0, 5),
       Fin: '',
       mostrarLista: false,
       students: []
@@ -126,6 +128,7 @@ export default {
     },
     getCurrentTime() {
       const now = new Date();
+      now.setMinutes(0, 0, 0);
       return now.toTimeString().substr(0, 5); // Obtener solo HH:MM
     },
     calculateEndTime(startTime) {

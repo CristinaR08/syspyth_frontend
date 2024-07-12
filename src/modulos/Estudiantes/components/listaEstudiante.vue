@@ -1,55 +1,117 @@
 <template>
   <div>
-  <div class="title">
-    <h1>Estudiantes Registrados</h1>
+    <div class="title">
+      <h1>Estudiantes Registrados</h1>
+    </div>
+    <div class="search-container">
+      <label class="buscar" for="search">Buscar Estudiante: </label>
+      <input type="text" v-model="cedula" id="search" placeholder="Ingresar cédula" />
+      <button @click="buscarCedula">Buscar</button>
+    </div>
+    <div class="search-container">
+      <label class="buscar" for="searchApellido">Buscar por Apellido: </label>
+      <input type="text" v-model="filtroApellido" id="searchApellido" placeholder="Ingresar apellido" />
+      <label class="buscar" for="searchNombre">Buscar por Nombre: </label>
+      <input type="text" v-model="filtroNombre" id="searchNombre" placeholder="Ingresar nombre" />
+      <button @click="aplicarFiltros">Buscar</button>
+      <button @click="limpiarFiltros">Limpiar</button>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-striped-columns">
+        <thead>
+          <tr>
+            <th scope="col" @click="sortBy('id')">ID</th>
+            <th scope="col" @click="sortBy('cedula')">Cédula</th>
+            <th scope="col" @click="sortBy('nombre')">Nombre</th>
+            <th scope="col" @click="sortBy('apellido')">Apellido</th>
+            <th scope="col" @click="sortBy('correo')">Correo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="student in sortedStudents" :key="student.id">
+            <td>{{ student.id }}</td>
+            <td>{{ student.cedula }}</td>
+            <td>{{ student.nombre }}</td>
+            <td>{{ student.apellido }}</td>
+            <td>{{ student.correo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="search-container">
-    <label class="buscar" for="search">Buscar Estudiante: </label>
-    <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
-    <button @click="buscarCedula">Buscar</button>
-  </div>
-  <div class="table-responsive">
-    <table class="table table-dark table-striped-columns">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Cédula</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Correo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="student in students" :key="student.id">
-          <td>{{ student.id }}</td>
-          <td>{{ student.cedula }}</td>
-          <td>{{ student.nombre }}</td>
-          <td>{{ student.apellido }}</td>
-          <td>{{ student.correo }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 </template>
 
 <script>
 import axios from 'axios';
 
-
 export default {
   name: 'listaEstudiantes',
-
   data() {
     return {
       students: [],
       cedula: '',
+      filtroApellido: '',
+      filtroNombre: '',
+      sortOrder: 'asc',
+      sortKey: 'id',
     };
   },
   created() {
     this.fetchEstudiantes();
   },
+  computed: {
+    sortedStudents() {
+      return this.students.slice().sort((a, b) => {
+        if (this.sortOrder === 'asc') {
+          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+        } else {
+          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+        }
+      });
+    },
+    filteredStudents() {
+      let filtered = this.students.slice();
+      
+      if (this.filtroApellido) {
+        filtered = filtered.filter(student => student.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+      }
+      
+      if (this.filtroNombre) {
+        filtered = filtered.filter(student => student.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+      }
+      
+      return filtered.sort((a, b) => {
+        if (this.sortOrder === 'asc') {
+          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+        } else {
+          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+        }
+      });
+    },
+  },
   methods: {
+    async aplicarFiltros() {
+    try {
+      const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
+      let estudiantes = response.data;
+
+      // Aplicar filtro por apellido
+      if (this.filtroApellido) {
+        const filtroApellidoLower = this.filtroApellido.toLowerCase();
+        estudiantes = estudiantes.filter(student => student.apellido.toLowerCase().includes(filtroApellidoLower));
+      }
+
+      // Aplicar filtro por nombre
+      if (this.filtroNombre) {
+        const filtroNombreLower = this.filtroNombre.toLowerCase();
+        estudiantes = estudiantes.filter(student => student.nombre.toLowerCase().includes(filtroNombreLower));
+      }
+
+      this.students = estudiantes;
+    } catch (error) {
+      console.error('Error al aplicar filtros:', error);
+    }
+  },
     async fetchEstudiantes() {
       try {
         const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
@@ -71,7 +133,15 @@ export default {
         this.fetchEstudiantes();
       }
     },
-  }
+    limpiarFiltros() {
+      this.filtroApellido = '';
+      this.filtroNombre = '';
+    },
+    sortBy(key) {
+      this.sortKey = key;
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    },
+  },
 };
 </script>
 
