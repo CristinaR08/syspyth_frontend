@@ -4,27 +4,29 @@
       <h1>Estudiantes Registrados</h1>
     </div>
     <div class="search-container">
-      <label class="buscar" for="search">Buscar Estudiante: </label>
+      <label class="buscar" for="search">Buscar por Cédula: </label>
       <input type="text" v-model="cedula" id="search" placeholder="Ingresar cédula" />
-      <button @click="buscarCedula">Buscar</button>
-    </div>
-    <div class="search-container">
+
       <label class="buscar" for="searchApellido">Buscar por Apellido: </label>
       <input type="text" v-model="filtroApellido" id="searchApellido" placeholder="Ingresar apellido" />
+
       <label class="buscar" for="searchNombre">Buscar por Nombre: </label>
       <input type="text" v-model="filtroNombre" id="searchNombre" placeholder="Ingresar nombre" />
-      <button @click="aplicarFiltros">Buscar</button>
-      <button @click="limpiarFiltros">Limpiar</button>
+
+      <div class="button-container">
+        <button @click="buscar">Buscar</button>
+        <button @click="limpiarFiltros">Limpiar</button>
+      </div>
     </div>
     <div class="table-responsive">
       <table class="table table-dark table-striped-columns">
         <thead>
           <tr>
-            <th scope="col" @click="sortBy('id')">ID</th>
-            <th scope="col" @click="sortBy('cedula')">Cédula</th>
-            <th scope="col" @click="sortBy('nombre')">Nombre</th>
-            <th scope="col" @click="sortBy('apellido')">Apellido</th>
-            <th scope="col" @click="sortBy('correo')">Correo</th>
+            <th scope="col" @click="sortBy('id')" style="cursor: pointer;">ID</th>
+            <th scope="col" @click="sortBy('cedula')" style="cursor: pointer;">Cédula</th>
+            <th scope="col" @click="sortBy('nombre')" style="cursor: pointer;">Nombre</th>
+            <th scope="col" @click="sortBy('apellido')" style="cursor: pointer;">Apellido</th>
+            <th scope="col">Correo</th>
           </tr>
         </thead>
         <tbody>
@@ -71,15 +73,15 @@ export default {
     },
     filteredStudents() {
       let filtered = this.students.slice();
-      
+
       if (this.filtroApellido) {
         filtered = filtered.filter(student => student.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
       }
-      
+
       if (this.filtroNombre) {
         filtered = filtered.filter(student => student.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
       }
-      
+
       return filtered.sort((a, b) => {
         if (this.sortOrder === 'asc') {
           return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
@@ -91,27 +93,22 @@ export default {
   },
   methods: {
     async aplicarFiltros() {
-    try {
-      const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
-      let estudiantes = response.data;
+      try {
+        const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
+        let estudiantes = response.data;
+        if (this.filtroApellido) {
+          estudiantes = estudiantes.filter(student => student.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+        }
 
-      // Aplicar filtro por apellido
-      if (this.filtroApellido) {
-        const filtroApellidoLower = this.filtroApellido.toLowerCase();
-        estudiantes = estudiantes.filter(student => student.apellido.toLowerCase().includes(filtroApellidoLower));
+        if (this.filtroNombre) {
+          estudiantes = estudiantes.filter(student => student.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+        }
+
+        this.students = estudiantes;
+      } catch (error) {
+        console.error('Error al aplicar filtros:', error);
       }
-
-      // Aplicar filtro por nombre
-      if (this.filtroNombre) {
-        const filtroNombreLower = this.filtroNombre.toLowerCase();
-        estudiantes = estudiantes.filter(student => student.nombre.toLowerCase().includes(filtroNombreLower));
-      }
-
-      this.students = estudiantes;
-    } catch (error) {
-      console.error('Error al aplicar filtros:', error);
-    }
-  },
+    },
     async fetchEstudiantes() {
       try {
         const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
@@ -120,22 +117,25 @@ export default {
         console.error('No existen estudiantes', error);
       }
     },
-    async buscarCedula() {
-      if (this.cedula) {
-        try {
-          const response = await axios.get(`http://localhost:5000/api/v1.0/estudiantes/consultar/${this.cedula}`);
+    async buscar() {
+      try {
+        let response;
+        if (this.cedula) {
+          response = await axios.get(`http://localhost:5000/api/v1.0/estudiantes/consultar/${this.cedula}`);
           this.students = [response.data];
-        } catch (error) {
-          console.error('No existe un estudiante registrado con esa cédula', error);
-          this.students = [];
+        } else {
+          await this.aplicarFiltros();
         }
-      } else {
-        this.fetchEstudiantes();
+      } catch (error) {
+        console.error('No se encontró el estudiante o error al buscar:', error);
+        this.students = [];
       }
     },
     limpiarFiltros() {
+      this.cedula = '';
       this.filtroApellido = '';
       this.filtroNombre = '';
+      this.fetchEstudiantes();
     },
     sortBy(key) {
       this.sortKey = key;
@@ -145,22 +145,24 @@ export default {
 };
 </script>
 
+
 <style scoped>
 /*@import "~bootstrap/dist/css/bootstrap.min.css";*/
 
-.title{
+.title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px; 
+  height: 40px;
   justify-content: center;
-  margin: 35px 0px 40px 0px; /*top right bottom left*/ 
+  margin: 35px 0px 40px 0px;
+  /*top right bottom left*/
   background-color: #034b1650;
-  box-shadow: 0 2px 4px rgb(0, 0, 2); 
-  padding: 0 20px; 
+  box-shadow: 0 2px 4px rgb(0, 0, 2);
+  padding: 0 20px;
   color: rgb(0, 0, 0);
   font-size: 15px;
-  font-family:'Courier New', Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .table-container {
@@ -172,7 +174,8 @@ export default {
 .table {
   width: 70%;
   border-collapse: collapse;
-  background-color: #000000; /*Fondo oscuro*/
+  background-color: #000000;
+  /*Fondo oscuro*/
   margin: 0 auto;
 }
 
@@ -184,10 +187,10 @@ th {
   font-size: 25px;
   color: #ffffff;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  
+
 }
 
-td{
+td {
   height: 30px;
 }
 
@@ -209,11 +212,24 @@ tbody tr:nth-child(even) {
 }
 
 .search-container {
-  margin: 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  margin: 40px auto;
+  max-width: 550px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.918);
+  border-radius: 10px;
+}
+
+.button-container {
+  display: flex; 
+  grid-column: 2;
+  justify-content: center; 
+  margin-top: 10px; 
 }
 
 button {
-  margin-left: 10px;
+  margin: 0px 5px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   border-radius: 15px;
   width: 70px;
@@ -222,6 +238,7 @@ button {
 }
 
 .buscar {
+  margin: 10px 0;
   color: black;
   font-size: 25px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -234,23 +251,10 @@ input {
   background-color: #ffffff31;
 }
 
-#search {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color: #333;
-  /* Color for input text */
-  font-size: 20px;
-}
 
-#search::placeholder {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color: #999;
-  /* Color for placeholder text */
-}
-
-@media(max-width:880px){
-  .table{
+@media(max-width:880px) {
+  .table {
     width: 90%;
   }
 }
-
 </style>

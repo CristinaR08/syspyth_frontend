@@ -40,35 +40,8 @@
     </div>
 
     <div>
-      <label for="numero_maquina">Número Máquina:</label>
-      <select id="numero_maquina" v-model="numeroMaquina">
-        <option disabled value="">Selecciona un equipo</option>
-        
-  <template v-if="sala === 'Aula 1'">
-    <option value="101">Equipo 101</option>
-    <option v-for="i in 19" :key="'Aula 1-' + i" :value="101 + i">Equipo {{ 101 + i }}</option>
-  </template>
-
-  <template v-if="sala === 'Aula 2'">
-    <option value="201">Equipo 201</option>
-    <option v-for="i in 19" :key="'Aula 2-' + i" :value="201 + i">Equipo {{ 201 + i }}</option>
-  </template>
-
-  <template v-if="sala === 'Aula 3'">
-    <option value="301">Equipo 301</option>
-    <option v-for="i in 19" :key="'Aula 3-' + i" :value="301 + i">Equipo {{ 301 + i }}</option>
-  </template>
-
-  <template v-if="sala === 'Aula A'">
-  <option value="101">Equipo A01</option>
-  <option v-for="i in 29" :key="'Aula A-' + i" :value="'A' + formatNumber(i + 1)">Equipo {{ 'A' + formatNumber(i + 1) }}</option>
-</template>
-
-<template v-if="sala === 'Aula B'">
-  <option value="101">Equipo B01</option>
-  <option v-for="i in 23" :key="'Aula B-' + i" :value="'B' + formatNumber(i + 1)">Equipo {{ 'B' + formatNumber(i + 1) }}</option>
-</template>
-      </select>
+      <label for="maquina">Máquina:</label>
+      <span>{{ maquina }}</span>
     </div>
 
     <div class="fecha">
@@ -98,12 +71,24 @@ export default {
       equipo: '',
       emailError: '',
       sala:'',
-      numeroMaquina: '',
+      maquina: '',
       cedulaError: '',
       cedulaValida: false
     };
   },
+  mounted() {
+  this.obtenerMaquina();
+  this.interval = setInterval(this.updateDateTime, 1000);
+},
   methods: {
+    obtenerMaquina() {
+  fetch('http://127.0.0.1:5000/api/v1.0/registro_estudiantes/maquina')
+    .then(response => response.json())
+    .then(data => {
+      this.maquina = data.maquina; // Asegúrate de que esta clave coincida con el backend
+    })
+    .catch(error => console.error('Error:', error));
+},
     formatNumber(number) {
       return number.toString().padStart(2, '0');
     },
@@ -129,14 +114,14 @@ export default {
       }
     },
     async registrarAsistencia() {
-      if (!this.cedulaValida || !this.numeroMaquina || !this.sala) {
+      if (!this.cedulaValida || !this.maquina || !this.sala) {
         this.cedulaError = 'Debes completar todos los campos antes de registrar la asistencia';
         return;
       }
 
       const registroData = {
         cedula: this.cedula,
-        numero_maquina: this.numeroMaquina,
+        numero_maquina: this.maquina,
         sala: this.sala
       };
 
@@ -146,7 +131,7 @@ export default {
         // Limpiar los datos después de registrar
         this.cedula = '';
         this.datosEstudiante = null;
-        this.numeroMaquina = '';
+        this.maquina = '';
         this.sala = '';
         this.cedulaValida = null;
         this.cedulaError = '';
@@ -161,9 +146,6 @@ export default {
     updateDateTime() {
       this.currentDateTime = this.getCurrentDateTime();
     }
-  },
-  mounted() {
-    this.interval = setInterval(this.updateDateTime, 1000);
   },
   beforeDestroy() {
     clearInterval(this.interval);

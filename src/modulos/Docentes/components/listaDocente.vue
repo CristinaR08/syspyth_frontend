@@ -4,18 +4,28 @@
       <h1>Docentes Registrados</h1>
     </div>
     <div class="search-container">
-      <label class="buscar" for="search">Buscar Docente:</label>
-      <input type="text" v-model="cedula" id="search" placeholder=" Ingresar cédula" />
-      <button @click="buscarDocente">Buscar</button>
+      <label class="buscar" for="search">Buscar por Cédula: </label>
+      <input type="text" v-model="cedula" id="search" placeholder="Ingresar cédula" />
+
+      <label class="buscar" for="searchApellido">Buscar por Apellido: </label>
+      <input type="text" v-model="filtroApellido" id="searchApellido" placeholder="Ingresar apellido" />
+
+      <label class="buscar" for="searchNombre">Buscar por Nombre: </label>
+      <input type="text" v-model="filtroNombre" id="searchNombre" placeholder="Ingresar nombre" />
+
+      <div class="button-container">
+        <button @click="buscar">Buscar</button>
+        <button @click="limpiarFiltros">Limpiar</button>
+      </div>
     </div>
     <div class="table-responsive">
       <table class="table table-dark table-striped-columns">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Cédula</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
+            <th scope="col" @click="sortBy('id')" style="cursor: pointer;">ID</th>
+            <th scope="col" @click="sortBy('cedula')" style="cursor: pointer;">Cédula</th>
+            <th scope="col" @click="sortBy('nombre')" style="cursor: pointer;">Nombre</th>
+            <th scope="col" @click="sortBy('apellido')" style="cursor: pointer;">Apellido</th>
             <th scope="col">Correo</th>
             <th scope="col">Contraseña</th>
             <th scope="col">Administrador</th>
@@ -45,13 +55,64 @@ export default {
   data() {
     return {
       docentes: [],
-      cedula: ''
+      cedula: '',
+      filtroApellido: '',
+      filtroNombre: '',
+      sortOrder: 'asc',
+      sortKey: 'id',
     };
   },
   created() {
     this.fetchDocentes();
   },
+  computed: {
+    sortedDocentes() {
+      return this.docentes.slice().sort((a, b) => {
+        if (this.sortOrder === 'asc') {
+          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+        } else {
+          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+        }
+      });
+    },
+    filteredDocentes() {
+      let filtered = this.docentes.slice();
+
+      if (this.filtroApellido) {
+        filtered = filtered.filter(docente => docente.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+      }
+
+      if (this.filtroNombre) {
+        filtered = filtered.filter(docente => docente.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+      }
+
+      return filtered.sort((a, b) => {
+        if (this.sortOrder === 'asc') {
+          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+        } else {
+          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+        }
+      });
+    },
+  },
   methods: {
+    async aplicarFiltros() {
+      try {
+        const response = await axios.get('http://localhost:5000/api/v1.0/docentes/lista');
+        let profes = response.data;
+        if (this.filtroApellido) {
+          profes = profes.filter(docente => docente.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+        }
+
+        if (this.filtroNombre) {
+          profes = profes.filter(docente => docente.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+        }
+
+        this.docentes = profes;
+      } catch (error) {
+        console.error('Error al aplicar filtros:', error);
+      }
+    },
     async fetchDocentes() {
       try {
         const response = await axios.get('http://localhost:5000/api/v1.0/docentes/lista');
@@ -72,7 +133,17 @@ export default {
       } else {
         this.fetchDocentes();
       }
-    }
+    },
+    limpiarFiltros() {
+      this.cedula = '';
+      this.filtroApellido = '';
+      this.filtroNombre = '';
+      this.fetchDocentes();
+    },
+    sortBy(key) {
+      this.sortKey = key;
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    },
   }
 };
 </script>
