@@ -32,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="docente in docentes" :key="docente.id">
+          <tr v-for="docente in sortedDocentes" :key="docente.id">
             <td>{{ docente.id }}</td>
             <td>{{ docente.cedula }}</td>
             <td>{{ docente.nombre }}</td>
@@ -51,7 +51,7 @@
 import axios from 'axios';
 
 export default {
-  name: 'ListaDocentes',
+  name: 'listaDocentes',
   data() {
     return {
       docentes: [],
@@ -121,17 +121,18 @@ export default {
         console.error('Mo hay docentes:', error);
       }
     },
-    async buscarCedula() {
-      if (this.cedula) {
-        try {
-          const response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
+    async buscar() {
+      try {
+        let response;
+        if (this.cedula) {
+          response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
           this.docentes = [response.data];
-        } catch (error) {
-          console.error('No se encontró al docente con la cédula ingresada:', error);
-          this.docentes = [];
+        } else {
+          await this.aplicarFiltros();
         }
-      } else {
-        this.fetchDocentes();
+      } catch (error) {
+        console.error('No se encontró el estudiante o error al buscar:', error);
+        this.docentes = [];
       }
     },
     limpiarFiltros() {
@@ -149,20 +150,20 @@ export default {
 </script>
 
 <style scoped>
-
-.title{
+.title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 40px; 
+  height: 40px;
   justify-content: center;
-  margin: 35px 0px 40px 0px; /*top right bottom left*/ 
+  margin: 35px 0px 40px 0px;
+  /*top right bottom left*/
   background-color: #034b1650;
-  box-shadow: 0 2px 4px rgb(0, 0, 2); 
-  padding: 0 20px; 
+  box-shadow: 0 2px 4px rgb(0, 0, 2);
+  padding: 0 20px;
   color: rgb(0, 0, 0);
   font-size: 15px;
-  font-family:'Courier New', Courier, monospace;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .table-container {
@@ -174,7 +175,8 @@ export default {
 .table {
   width: 70%;
   border-collapse: collapse;
-  background-color: #000000; /*Fondo oscuro*/
+  background-color: #000000;
+  /*Fondo oscuro*/
   margin: 0 auto;
 }
 
@@ -185,12 +187,12 @@ th {
   height: 40px;
   font-size: 25px;
   color: #ffffff;
-  
+
   font-family: Georgia, 'Times New Roman', Times, serif;
-  
+
 }
 
-td{
+td {
   height: 30px;
 }
 
@@ -212,7 +214,20 @@ tbody tr:nth-child(even) {
 }
 
 .search-container {
-  margin: 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  margin: 40px auto;
+  max-width: 550px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.918);
+  border-radius: 10px;
+}
+
+.button-container {
+  display: flex;
+  grid-column: 2;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 button {
@@ -225,6 +240,7 @@ button {
 }
 
 .buscar {
+  margin: 10px 0;
   color: black;
   font-size: 25px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -235,30 +251,27 @@ input {
   border-radius: 5px;
   height: 25px;
   background-color: #ffffff31;
-}
-
-#search {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color: #333;
-  /* Color for input text */
-  font-size: 20px;
 }
 
-#search::placeholder {
+#search::placeholder,
+#searchApellido::placeholder,
+#searchNombre::placeholder {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #999;
-  /* Color for placeholder text */
 }
 
-@media(max-width:880px){
-  .table{
+@media(max-width:880px) {
+  .table {
     width: 95%;
   }
-  th{
+
+  th {
     font-size: 18px;
     text-align: center;
   }
-  td{
+
+  td {
     font-size: 15px;
     text-align: center;
   }

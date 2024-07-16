@@ -3,38 +3,48 @@
         <div class="title">
             <h2>Administradores</h2>
         </div>
-        <!--<div class="search-container">
-      <label for="search">Buscar por Cédula:</label>
-      <input type="text" v-model="cedula" id="search" />
-      <button @click="fetchEstudianteByCedula">Buscar</button>
-    </div>-->
-    <div class="table-responsive">
-        <table class="table table-dark table-striped-columns">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Cédula</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Correo</th>
-                    <th scope="col">Contraseña</th>
-                    <th scope="col">Administrador</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="admin in admins" :key="admin.id">
-                    <td>{{ admin.id }}</td>
-                    <td>{{ admin.cedula }}</td>
-                    <td>{{ admin.nombre }}</td>
-                    <td>{{ admin.apellido }}</td>
-                    <td>{{ admin.correo }}</td>
-                    <td>{{ admin.contraseña }}</td>
-                    <td>{{ admin.administrador }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="search-container">
+            <label class="buscar" for="search">Buscar por Cédula: </label>
+            <input type="text" v-model="cedula" id="search" placeholder="Ingresar cédula" />
+
+            <label class="buscar" for="searchApellido">Buscar por Apellido: </label>
+            <input type="text" v-model="filtroApellido" id="searchApellido" placeholder="Ingresar apellido" />
+
+            <label class="buscar" for="searchNombre">Buscar por Nombre: </label>
+            <input type="text" v-model="filtroNombre" id="searchNombre" placeholder="Ingresar nombre" />
+
+            <div class="button-container">
+                <button @click="buscar">Buscar</button>
+                <button @click="limpiarFiltros">Limpiar</button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped-columns">
+                <thead>
+                    <tr>
+                        <th scope="col" @click="sortBy('id')" style="cursor: pointer;">ID</th>
+                        <th scope="col" @click="sortBy('cedula')" style="cursor: pointer;">Cédula</th>
+                        <th scope="col" @click="sortBy('nombre')" style="cursor: pointer;">Nombre</th>
+                        <th scope="col" @click="sortBy('apellido')" style="cursor: pointer;">Apellido</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Contraseña</th>
+                        <th scope="col">Administrador</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="admin in sortedAdmins" :key="admin.id">
+                        <td>{{ admin.id }}</td>
+                        <td>{{ admin.cedula }}</td>
+                        <td>{{ admin.nombre }}</td>
+                        <td>{{ admin.apellido }}</td>
+                        <td>{{ admin.correo }}</td>
+                        <td>{{ admin.contraseña }}</td>
+                        <td>{{ admin.administrador }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -45,13 +55,64 @@ export default {
     data() {
         return {
             admins: [],
-            cedula: ''
+            cedula: '',
+            filtroApellido: '',
+            filtroNombre: '',
+            sortOrder: 'asc',
+            sortKey: 'id',
         };
     },
     created() {
         this.fetchAdmin();
     },
+    computed: {
+        sortedAdmins() {
+            return this.admins.slice().sort((a, b) => {
+                if (this.sortOrder === 'asc') {
+                    return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+                } else {
+                    return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+                }
+            });
+        },
+        filteredAdmins() {
+            let filtered = this.admins.slice();
+
+            if (this.filtroApellido) {
+                filtered = filtered.filter(admin => admin.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+            }
+
+            if (this.filtroNombre) {
+                filtered = filtered.filter(admin => admin.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+            }
+
+            return filtered.sort((a, b) => {
+                if (this.sortOrder === 'asc') {
+                    return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+                } else {
+                    return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
+                }
+            });
+        },
+    },
     methods: {
+        async aplicarFiltros() {
+            try {
+                const response = await axios.get('http://localhost:5000/api/v1.0/administrador/lista');
+                let adm = response.data;
+                if (this.filtroApellido) {
+                    adm = adm.filter(admin => admin.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
+                }
+
+                if (this.filtroNombre) {
+                    adm = adm.filter(admin => admin.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
+                }
+
+                this.admins = adm;
+            } catch (error) {
+                console.error('Error al aplicar filtros:', error);
+            }
+        },
         async fetchAdmin() {
             try {
                 const response = await axios.get('http://localhost:5000/api/v1.0/administrador/lista');
@@ -72,7 +133,31 @@ export default {
             } else {
                 this.fetchAdmin();
             }
-        }
+        },
+        async buscar() {
+            try {
+                let response;
+                if (this.cedula) {
+                    response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
+                    this.docentes = [response.data];
+                } else {
+                    await this.aplicarFiltros();
+                }
+            } catch (error) {
+                console.error('No se encontró el estudiante o error al buscar:', error);
+                this.docentes = [];
+            }
+        },
+        limpiarFiltros() {
+            this.cedula = '';
+            this.filtroApellido = '';
+            this.filtroNombre = '';
+            this.fetchDocentes();
+        },
+        sortBy(key) {
+            this.sortKey = key;
+            this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+        },
     }
 };
 </script>
@@ -142,8 +227,22 @@ tbody tr:nth-child(even) {
 }
 
 .search-container {
-    margin: 40px;
+    display: grid;
+    grid-template-columns: repeat(2, 250px);
+    margin: 40px auto;
+    max-width: 550px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.918);
+    border-radius: 10px;
 }
+
+.button-container {
+    display: flex;
+    grid-column: 2;
+    justify-content: center;
+    margin-top: 10px;
+}
+
 
 button {
     margin-left: 10px;
@@ -155,6 +254,7 @@ button {
 }
 
 .buscar {
+    margin: 10px 0;
     color: black;
     font-size: 25px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -165,19 +265,14 @@ input {
     border-radius: 5px;
     height: 25px;
     background-color: #ffffff31;
-}
-
-#search {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #333;
-    /* Color for input text */
-    font-size: 20px;
 }
 
-#search::placeholder {
+#search::placeholder,
+#searchApellido::placeholder,
+#searchNombre::placeholder {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: #999;
-    /* Color for placeholder text */
 }
 
 @media(max-width:880px) {

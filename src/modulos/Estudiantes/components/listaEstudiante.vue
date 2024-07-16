@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="student in sortedStudents" :key="student.id">
+          <tr v-for="student in paginatedStudents":key="student.id">
             <td>{{ student.id }}</td>
             <td>{{ student.cedula }}</td>
             <td>{{ student.nombre }}</td>
@@ -39,6 +39,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="pagination">
+      <button class="prev" @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button class="next" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
     </div>
   </div>
 </template>
@@ -56,6 +61,8 @@ export default {
       filtroNombre: '',
       sortOrder: 'asc',
       sortKey: 'id',
+      currentPage: 1,
+      pageSize: 5,
     };
   },
   created() {
@@ -63,7 +70,7 @@ export default {
   },
   computed: {
     sortedStudents() {
-      return this.students.slice().sort((a, b) => {
+      return this.filteredStudents.sort((a, b) => {
         if (this.sortOrder === 'asc') {
           return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
         } else {
@@ -72,7 +79,7 @@ export default {
       });
     },
     filteredStudents() {
-      let filtered = this.students.slice();
+      let filtered = this.students;
 
       if (this.filtroApellido) {
         filtered = filtered.filter(student => student.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
@@ -82,13 +89,15 @@ export default {
         filtered = filtered.filter(student => student.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
       }
 
-      return filtered.sort((a, b) => {
-        if (this.sortOrder === 'asc') {
-          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
-        } else {
-          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
-        }
-      });
+      return filtered;
+    },
+    paginatedStudents() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.sortedStudents.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredStudents.length / this.pageSize);
     },
   },
   methods: {
@@ -135,11 +144,22 @@ export default {
       this.cedula = '';
       this.filtroApellido = '';
       this.filtroNombre = '';
+      this.currentPage = 1;
       this.fetchEstudiantes();
     },
     sortBy(key) {
       this.sortKey = key;
       this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
     },
   },
 };
@@ -156,7 +176,6 @@ export default {
   height: 40px;
   justify-content: center;
   margin: 35px 0px 40px 0px;
-  /*top right bottom left*/
   background-color: #034b1650;
   box-shadow: 0 2px 4px rgb(0, 0, 2);
   padding: 0 20px;
@@ -175,7 +194,6 @@ export default {
   width: 70%;
   border-collapse: collapse;
   background-color: #000000;
-  /*Fondo oscuro*/
   margin: 0 auto;
 }
 
@@ -222,10 +240,10 @@ tbody tr:nth-child(even) {
 }
 
 .button-container {
-  display: flex; 
+  display: flex;
   grid-column: 2;
-  justify-content: center; 
-  margin-top: 10px; 
+  justify-content: center;
+  margin-top: 10px;
 }
 
 button {
@@ -249,8 +267,31 @@ input {
   border-radius: 5px;
   height: 25px;
   background-color: #ffffff31;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
+.table-responsive {
+  margin-bottom: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-bottom: 150px;
+
+}
+
+.pagination button {
+  margin: 0 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  border-radius: 15px;
+  width: 130px;
+  height: 40px;
+  font-size: 20px;
+}
 
 @media(max-width:880px) {
   .table {

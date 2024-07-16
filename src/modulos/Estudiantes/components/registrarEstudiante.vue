@@ -169,4 +169,10 @@ label{
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+@media(max-width:880px) {
+  .container {
+    width: 50%;
+  }
+}
+
 </style>
