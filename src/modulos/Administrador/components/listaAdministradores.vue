@@ -32,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="admin in sortedAdmins" :key="admin.id">
+                    <tr v-for="admin in paginatedAdmins" :key="admin.id">
                         <td>{{ admin.id }}</td>
                         <td>{{ admin.cedula }}</td>
                         <td>{{ admin.nombre }}</td>
@@ -43,6 +43,11 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="pagination">
+            <button class="prev" @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+            <span>Página {{ currentPage }} de {{ totalPages }}</span>
+            <button class="next" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
         </div>
     </div>
 </template>
@@ -60,6 +65,8 @@ export default {
             filtroNombre: '',
             sortOrder: 'asc',
             sortKey: 'id',
+            currentPage: 1,
+            pageSize: 10,
         };
     },
     created() {
@@ -67,7 +74,7 @@ export default {
     },
     computed: {
         sortedAdmins() {
-            return this.admins.slice().sort((a, b) => {
+            return this.filteredAdmins.sort((a, b) => {
                 if (this.sortOrder === 'asc') {
                     return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
                 } else {
@@ -86,13 +93,15 @@ export default {
                 filtered = filtered.filter(admin => admin.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
             }
 
-            return filtered.sort((a, b) => {
-                if (this.sortOrder === 'asc') {
-                    return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
-                } else {
-                    return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
-                }
-            });
+            return filtered;
+        },
+        paginatedAdmins() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+            return this.sortedAdmins.slice(start, end);
+        },
+        totalPages() {
+            return Math.ceil(this.filteredAdmins.length / this.pageSize);
         },
     },
     methods: {
@@ -158,6 +167,16 @@ export default {
             this.sortKey = key;
             this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
         },
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
+        },
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+            }
+        },
     }
 };
 </script>
@@ -170,8 +189,7 @@ export default {
     height: 40px;
     justify-content: center;
     margin: 35px 0px 40px 0px;
-    /*top right bottom left*/
-    background-color: #034b1650;
+    background-color: #4b080350;
     box-shadow: 0 2px 4px rgb(0, 0, 2);
     padding: 0 20px;
     color: rgb(0, 0, 0);
@@ -194,7 +212,7 @@ export default {
 }
 
 th {
-    background-color: #0c3708;
+    background-color: #370808;
     /*encabezado*/
     font-weight: bold;
     height: 40px;
@@ -215,13 +233,13 @@ tr {
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #edf7ed;
+    background-color: #f7eded;
     /*filas impares*/
     color: #000000;
 }
 
 tbody tr:nth-child(even) {
-    background-color: #d0f4c5;
+    background-color: #f4c5c5e0;
     /*filas pares*/
     color: #000000;
 }
@@ -268,11 +286,27 @@ input {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-#search::placeholder,
-#searchApellido::placeholder,
-#searchNombre::placeholder {
+.table-responsive {
+    margin-bottom: 20px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    margin-bottom: 150px;
+
+}
+
+.pagination button {
+    margin: 0 10px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #999;
+    border-radius: 15px;
+    width: 130px;
+    height: 40px;
+    font-size: 20px;
 }
 
 @media(max-width:880px) {

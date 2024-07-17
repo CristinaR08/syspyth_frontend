@@ -62,7 +62,7 @@ export default {
       sortOrder: 'asc',
       sortKey: 'id',
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
     };
   },
   created() {

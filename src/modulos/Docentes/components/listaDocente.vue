@@ -32,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="docente in sortedDocentes" :key="docente.id">
+          <tr v-for="docente in paginatedDocentes" :key="docente.id">
             <td>{{ docente.id }}</td>
             <td>{{ docente.cedula }}</td>
             <td>{{ docente.nombre }}</td>
@@ -43,6 +43,11 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="pagination">
+      <button class="prev" @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button class="next" @click="nextPage" :disabled="currentPage === totalPages">Siguiente</button>
     </div>
   </div>
 </template>
@@ -60,6 +65,8 @@ export default {
       filtroNombre: '',
       sortOrder: 'asc',
       sortKey: 'id',
+      currentPage: 1,
+      pageSize: 10,
     };
   },
   created() {
@@ -67,7 +74,7 @@ export default {
   },
   computed: {
     sortedDocentes() {
-      return this.docentes.slice().sort((a, b) => {
+      return this.filteredDocentes.sort((a, b) => {
         if (this.sortOrder === 'asc') {
           return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
         } else {
@@ -76,7 +83,7 @@ export default {
       });
     },
     filteredDocentes() {
-      let filtered = this.docentes.slice();
+      let filtered = this.docentes;
 
       if (this.filtroApellido) {
         filtered = filtered.filter(docente => docente.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
@@ -86,13 +93,15 @@ export default {
         filtered = filtered.filter(docente => docente.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase()));
       }
 
-      return filtered.sort((a, b) => {
-        if (this.sortOrder === 'asc') {
-          return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
-        } else {
-          return a[this.sortKey] < b[this.sortKey] ? 1 : -1;
-        }
-      });
+      return filtered;
+    },
+    paginatedDocentes() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.sortedDocentes.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredDocentes.length / this.pageSize);
     },
   },
   methods: {
@@ -145,6 +154,16 @@ export default {
       this.sortKey = key;
       this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
   }
 };
 </script>
@@ -158,7 +177,7 @@ export default {
   justify-content: center;
   margin: 35px 0px 40px 0px;
   /*top right bottom left*/
-  background-color: #034b1650;
+  background-color: #03144b50;
   box-shadow: 0 2px 4px rgb(0, 0, 2);
   padding: 0 20px;
   color: rgb(0, 0, 0);
@@ -181,7 +200,7 @@ export default {
 }
 
 th {
-  background-color: #0c3708;
+  background-color: #080b37;
   /*encabezado*/
   font-weight: bold;
   height: 40px;
@@ -202,13 +221,13 @@ tr {
 }
 
 tbody tr:nth-child(odd) {
-  background-color: #edf7ed;
+  background-color: #f1edf7;
   /*filas impares*/
   color: #000000;
 }
 
 tbody tr:nth-child(even) {
-  background-color: #d0f4c5;
+  background-color: #c5c6f4;
   /*filas pares*/
   color: #000000;
 }
@@ -254,11 +273,27 @@ input {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-#search::placeholder,
-#searchApellido::placeholder,
-#searchNombre::placeholder {
+.table-responsive {
+  margin-bottom: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-bottom: 150px;
+
+}
+
+.pagination button {
+  margin: 0 10px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color: #999;
+  border-radius: 15px;
+  width: 130px;
+  height: 40px;
+  font-size: 20px;
 }
 
 @media(max-width:880px) {

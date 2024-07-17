@@ -8,9 +8,9 @@
   </div>
 
   <div class="cedula">
-      <label for="cedula">Cédula: </label>
-      <input type="text" id="cedula" v-model="cedula" @blur="validarCedula">
-      <p v-if="cedulaError" style="color: red;">{{ cedulaError }}</p>
+    <label for="cedula">Cédula: </label>
+    <input type="text" id="cedula" v-model="cedula" @blur="validarCedula">
+    <p v-if="cedulaError" style="color: red;">{{ cedulaError }}</p>
   </div>
 
   <button @click="validarCedula" class="validar">Validar</button>
@@ -39,7 +39,7 @@
       </select>
     </div>
 
-    <div>
+    <div class="maquina">
       <label for="maquina">Máquina:</label>
       <span>{{ maquina }}</span>
     </div>
@@ -47,13 +47,19 @@
     <div class="fecha">
       <label for="fecha">Fecha:</label>
       <div class="datetime">
-        {{ currentDateTime }}
+        {{ currentDate }}
       </div>
-    </div >
-    
+    </div>
+    <div class="hora">
+      <label for="hora">Hora:</label>
+      <div class="datetime">
+        {{ currentTime }}
+      </div>
+    </div>
+
     <button @click="registrarAsistencia" class="registrar" :disabled="!cedulaValida">Registrar Asistencia</button>
   </div>
-  
+
 </template>
 
 <script>
@@ -62,7 +68,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      currentDateTime: this.getCurrentDateTime(),
+      currentDate: this.getCurrentDate(),
+      currentTime: this.getCurrentTime(),
       cedula: '',
       nombre: '',
       apellido: '',
@@ -70,25 +77,25 @@ export default {
       carrera: '',
       equipo: '',
       emailError: '',
-      sala:'',
+      sala: '',
       maquina: '',
       cedulaError: '',
       cedulaValida: false
     };
   },
   mounted() {
-  this.obtenerMaquina();
-  this.interval = setInterval(this.updateDateTime, 1000);
-},
+    this.obtenerMaquina();
+    this.interval = setInterval(this.updateDateTime, 1000);
+  },
   methods: {
     obtenerMaquina() {
-  fetch('http://127.0.0.1:5000/api/v1.0/registro_estudiantes/maquina')
-    .then(response => response.json())
-    .then(data => {
-      this.maquina = data.maquina; // Asegúrate de que esta clave coincida con el backend
-    })
-    .catch(error => console.error('Error:', error));
-},
+      fetch('http://127.0.0.1:5000/api/v1.0/registro_estudiantes/maquina')
+        .then(response => response.json())
+        .then(data => {
+          this.maquina = data.maquina; // Asegúrate de que esta clave coincida con el backend
+        })
+        .catch(error => console.error('Error:', error));
+    },
     formatNumber(number) {
       return number.toString().padStart(2, '0');
     },
@@ -122,7 +129,9 @@ export default {
       const registroData = {
         cedula: this.cedula,
         numero_maquina: this.maquina,
-        sala: this.sala
+        sala: this.sala,
+        fecha: this.currentDate,
+        hora: this.currentTime
       };
 
       try {
@@ -130,21 +139,31 @@ export default {
         alert('Asistencia registrada exitosamente');
         // Limpiar los datos después de registrar
         this.cedula = '';
-        this.datosEstudiante = null;
-        this.maquina = '';
+        this.nombre = '';
+        this.apellido = '';
+        this.correo = '';
+        this.carrera = '';
         this.sala = '';
-        this.cedulaValida = null;
+        this.maquina = '';
+        this.cedulaValida = false;
         this.cedulaError = '';
       } catch (error) {
         this.cedulaError = error.response ? error.response.data.error : 'Error al registrar la asistencia';
       }
     },
-    getCurrentDateTime() {
+    getCurrentDate() {
       const now = new Date();
-      return now.toLocaleString();
+      return now.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    },
+    getCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`; // Formato HH:MM
     },
     updateDateTime() {
-      this.currentDateTime = this.getCurrentDateTime();
+      this.currentDate = this.getCurrentDate();
+      this.currentTime = this.getCurrentTime();
     }
   },
   beforeDestroy() {
@@ -154,83 +173,92 @@ export default {
 </script>
 
 <style scoped>
-.title{
+.title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px; 
+  height: 60px;
   justify-content: center;
-  margin: 35px 0px 40px 0px; /*top right bottom left*/ 
+  margin: 35px 0px 40px 0px;
+  /*top right bottom left*/
   background-color: #4A0E0A;
-  box-shadow: 0 2px 4px rgb(0, 0, 2); 
-  padding: 0 20px; 
+  box-shadow: 0 2px 4px rgb(0, 0, 2);
+  padding: 0 20px;
   color: rgb(255, 255, 255);
   font-size: 15px;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.indicacion{
+.indicacion {
   font-size: 15px;
   color: black;
-  font-family: 'Courier New', Courier, monospace;}
+  font-family: 'Courier New', Courier, monospace;
+}
 
+.maquina{
+  margin-bottom: 10px;
+}
 
-.Datos{
+.Datos {
   display: grid;
   grid-template-columns: repeat(2, 100px);
 }
 
-.fecha {
+.fecha, .hora {
   display: flex;
   align-items: center;
 }
 
-.fecha label {
-  margin-right: 10px; 
+.fecha label, .hora label {
+  margin-right: 15px;
 }
 
-.datetime{
+.datetime {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 20px;
   color: black;
 }
 
-.validar{
+.validar {
   margin: 15px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: bold
 }
 
-.contenedor{
+.contenedor {
   display: grid;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
-  background-color:#DEEEFF ;
+  background-color: #DEEEFF;
   border-radius: 15px;
   border: 4px solid #000000;
-  margin: 0% 30%;
+  margin: 1% 25%;
   margin-bottom: 100px;
 }
 
-.registrar{
+.registrar {
   margin: 15px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: bold
 }
 
 
-label{
+label {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 25px;
   color: #000000;
-  margin: 10px;
+  margin: 10px 20px;
+  text-align: right;
 }
 
-select{
-    height: 25px;
-  }
+select {
+  height: 25px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
 
-  button{
+button {
   margin: 30px 0px;
   font-size: 15px;
   padding: 10px;
@@ -240,14 +268,24 @@ select{
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-span{
+span {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 25px;
   color: #444242;
   margin: 10px;
+  text-align: center;
 }
 
-select{
-  margin: 10px;
+input{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 15px;
+  border-radius: 5px;
+  padding: 5px 5px;
+}
+
+@media(max-width:880px) {
+  .contenedor {
+    width: 50%;
+  }
 }
 </style>
