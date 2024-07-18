@@ -4,11 +4,11 @@
     <div class="salas">
       <label for="sala">Sala:</label>
       <select id="sala" v-model="sala">
-        <option value="Aula1">Aula 1</option>
-        <option value="Aula2">Aula 2</option>
-        <option value="Aula3">Aula 3</option>
-        <option value="AulaA">Aula A</option>
-        <option value="AulaB">Aula B</option>
+        <option value="Aula 1">Aula 1</option>
+        <option value="Aula 2">Aula 2</option>
+        <option value="Aula 3">Aula 3</option>
+        <option value="Aula A">Aula A</option>
+        <option value="Aula B">Aula B</option>
       </select>
     </div>
 
@@ -23,7 +23,7 @@
 
       <div class="filaB">
         <label for="semestre">Semestre: </label>
-        <select id="sala" v-model="semestre">
+        <select id="semestre" v-model="semestre">
           <option value="primero">Primero</option>
           <option value="segundo">Segundo</option>
           <option value="tercer">Tercero</option>
@@ -55,6 +55,7 @@
 
         <label for="Fin">Hora Fin: </label>
         <span>{{ Fin }}</span>
+
       </div>
       <div class="boton">
         <button @click="verEstudiantes">VER LISTA</button>
@@ -69,15 +70,19 @@
             <th>NÓMINA</th>
             <th>EQUIPO</th>
             <th>CÉDULA</th>
-            <th>ASISTENCIA</th>
+            <th>
+              <input type="checkbox" v-model="seleccionarTodos" @change="toggleSeleccionarTodos"> Asistencia
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="student in students" :key="student.cedula">
             <td>{{ student.nombre }}</td>
-            <td>{{ student.equipo }}</td>
+            <td>{{ student.numero_maquina }}</td>
             <td>{{ student.cedula }}</td>
-            <td>{{ student.asistencia }}</td>
+            <td>
+              <input type="checkbox" v-model="student.confirmacion" @change="cambiarConfirmacion(student.cedula, student.confirmacion)">
+            </td>
           </tr>
         </tbody>
       </table>
@@ -101,13 +106,9 @@ export default {
       Inicio: now.toTimeString().substr(0, 5),
       Fin: '',
       mostrarLista: false,
-      students: []
+      students: [],
+      seleccionarTodo : false,
     };
-  },
-  computed: {
-    tipoDeInput() {
-      return this.mostrarContrasena ? 'text' : 'password';
-    }
   },
   methods: {
     verEstudiantes() {
@@ -115,12 +116,36 @@ export default {
     },
     async obtenerEstudiantes() {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/listaEstudiantes?sala=${this.sala}&inicio=${this.Inicio}&fin=${this.Fin}`);
+        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/registro_docentes/sala/${this.sala}`);
         const data = await response.json();
+        console.log("Datos de estudiantes:", data);
         this.students = data;
         this.mostrarLista = true;
       } catch (error) {
         console.error("Error al obtener estudiantes:", error);
+      }
+    },
+    toggleSeleccionarTodos() {
+      this.students.forEach(student => {
+        student.confirmacion = this.seleccionarTodos;
+      });
+    },
+    async cambiarConfirmacion(cedula, confirmacion) {
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/registro_estudiantes/confirmar/${cedula}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ confirmacion })
+        });
+        if (response.ok) {
+          console.log('Confirmación cambiada con éxito');
+        } else {
+          console.error('Error al cambiar confirmación');
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
     },
     registrarAsistencia() {
@@ -218,6 +243,7 @@ button {
 .registrar {
   background: #1A72C9;
   font-weight: bold;
+  margin-bottom: 150px;
 }
 
 label {
@@ -256,5 +282,17 @@ span {
   font-size: 25px;
   color: #302f2f;
   margin: 10px;
+}
+
+@media(max-width:880px) {
+  .contenedor {
+    width: 70%;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: #DEEEFF;
+    border-radius: 15px;
+    border: 4px solid #000000;
+  }
 }
 </style>

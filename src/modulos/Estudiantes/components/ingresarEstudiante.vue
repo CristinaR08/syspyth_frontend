@@ -17,7 +17,7 @@
 
   <div class="contenedor">
     <div class="Datos">
-      <label for="nombre">Nombre:</label>
+      <label for="nombre">Nombre: </label>
       <span>{{ nombre }}</span>
       <label for="apellido">Apellido:</label>
       <span>{{ apellido }}</span>
@@ -144,7 +144,6 @@ export default {
         this.correo = '';
         this.carrera = '';
         this.sala = '';
-        this.maquina = '';
         this.cedulaValida = false;
         this.cedulaError = '';
       } catch (error) {
@@ -232,14 +231,16 @@ export default {
   background-color: #DEEEFF;
   border-radius: 15px;
   border: 4px solid #000000;
-  margin: 1% 25%;
+  margin: 1% 40%;
   margin-bottom: 100px;
+  width: 25%;
 }
 
 .registrar {
   margin: 15px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: bold
+  font-weight: bold;
+  margin-left: 80px;
 }
 
 
@@ -272,7 +273,8 @@ span {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 25px;
   color: #444242;
-  margin: 10px;
+  margin-top: 10px;
+  margin-left: 10px;
   text-align: center;
 }
 
@@ -286,6 +288,8 @@ input{
 @media(max-width:880px) {
   .contenedor {
     width: 50%;
+    margin: 1% 25%;
+    margin-bottom: 110px;
   }
 }
 </style>
