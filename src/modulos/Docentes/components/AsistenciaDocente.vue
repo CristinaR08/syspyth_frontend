@@ -64,6 +64,7 @@
 
     <div v-if="mostrarLista" class="lista">
       <h1 class="listado">Registro de Estudiantes</h1>
+      <button class="actualizar" @click="obtenerEstudiantes">Actualizar Lista</button> 
       <table>
         <thead>
           <tr>
@@ -77,7 +78,7 @@
         </thead>
         <tbody>
           <tr v-for="student in students" :key="student.cedula">
-            <td>{{ student.nombre }}</td>
+            <td>{{ student.nombre }} {{ student.apellido }}</td>
             <td>{{ student.numero_maquina }}</td>
             <td>{{ student.cedula }}</td>
             <td>
@@ -238,6 +239,11 @@ button {
   border-radius: 10px;
   width: 200px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.actualizar button{
+  margin: 10px;
+  background: #0a4a3a;
 }
 
 .registrar {

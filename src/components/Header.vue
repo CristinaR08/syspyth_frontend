@@ -4,38 +4,28 @@
     <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" @click="principal" style="cursor: pointer" />
     <div class="Opciones">
       <div v-if="!isAdmin" class="options">
-        <button>
-          <router-link class="router" to="/registrarEstudiante">
+        <router-link class="router" to="/registrarEstudiante">
+          <button>
             Registro
-          </router-link>
-        </button>
-        <button>
-          <router-link class="router" to="/ingresarEstudiante">
-            Estudiante
-          </router-link>
-        </button>
-        <button>
-          <router-link class="router" to="/ingresarDocente">
-            Docente
-          </router-link>
-        </button>
+          </button>
+        </router-link>
+        <router-link class="router" to="/ingresarEstudiante">
+          <button>Estudiante</button>
+        </router-link>
+        <router-link class="router" to="/ingresarDocente">
+          <button>Docente</button>
+        </router-link>
       </div>
       <div v-if="isAdmin" class="options">
-        <button>
-          <router-link class="router" to="/registrarNuevo">
-            Nuevo
-          </router-link>
-        </button>
-        <button>
-          <router-link class="router" to="/ver_listas">
-            Listas
-          </router-link>
-        </button>
-        <button>
-          <router-link class="router" to="/">
-            Asistencia
-          </router-link>
-        </button>
+        <router-link class="router" to="/registrarNuevo">
+          <button>Nuevo</button>
+        </router-link>
+        <router-link class="router" to="/ver_listas">
+          <button>Listas</button>
+        </router-link>
+        <router-link class="router" to="/">
+          <button>Asistencia</button>
+        </router-link>
         <button class="salir" @click="logout">
           LogOut
         </button>
@@ -115,7 +105,7 @@ export default {
 .options {
   align-items: center;
   flex-wrap: wrap;
-  margin-left: auto; 
+  margin-left: auto;
 }
 
 .button-row {
@@ -123,7 +113,7 @@ export default {
 }
 
 .options button {
-  margin: 5px; 
+  margin: 5px;
 }
 
 
@@ -144,14 +134,11 @@ button {
   font-weight: bolder;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   background-color: #0a2b4b;
+  color: azure;
 }
 
 button:hover {
   background-color: #1a72c9;
-
-}
-
-.router:hover {
   color: black;
 }
 
@@ -164,5 +151,4 @@ button:hover {
   background-color: #c20f03;
   color: black;
 }
-
 </style>
