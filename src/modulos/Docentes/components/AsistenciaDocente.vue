@@ -4,12 +4,14 @@
     <div class="salas">
       <label for="sala">Sala:</label>
       <select id="sala" v-model="sala">
+        <option value="">Seleccione la sala</option>
         <option value="Aula 1">Aula 1</option>
         <option value="Aula 2">Aula 2</option>
         <option value="Aula 3">Aula 3</option>
         <option value="Aula A">Aula A</option>
         <option value="Aula B">Aula B</option>
       </select>
+      <p v-if="errors.sala" class="error">{{ errors.sala }}</p>
     </div>
 
     <div class="contenedor">
@@ -17,13 +19,14 @@
         <label for="nombreDocente">Docente:</label>
         <span>{{ nombre }} {{ apellido }}</span>
         <label for="materia">Materia:</label>
-        <input type="text" v-model="materia" id="materia" />
-
+        <input type="text" v-model="materia" id="materia"  placeholder="Ingresar materia" />
+        <p v-if="errors.materia" class="error">{{ errors.materia }}</p>
       </div>
 
       <div class="filaB">
         <label for="semestre">Semestre: </label>
         <select id="semestre" v-model="semestre">
+          <option value="">Selecciona un semestre</option>
           <option value="primero">Primero</option>
           <option value="segundo">Segundo</option>
           <option value="tercer">Tercero</option>
@@ -35,9 +38,11 @@
           <option value="noveno">Noveno</option>
           <option value="decimo">Décimo</option>
         </select>
+        <p v-if="errors.semestre" class="error">{{ errors.semestre }}</p>
 
         <label for="paralelo">Paralelo: </label>
         <select id="paralelo" v-model="paralelo">
+          <option value="">Selecciona un paralelo</option>
           <option value="P1">1</option>
           <option value="P2">2</option>
           <option value="P3">3</option>
@@ -49,16 +54,21 @@
           <option value="P9">9</option>
           <option value="P10">10</option>
         </select>
+        <p v-if="errors.paralelo" class="error">{{ errors.paralelo }}</p>
 
+        <div class="filaB">
         <label for="Inicio">Hora Inicio: </label>
         <span>{{ Inicio }}</span>
 
         <label for="Fin">Hora Fin: </label>
         <span>{{ Fin }}</span>
 
+        <label for="Fecha">Fecha: </label>
+        <span>{{ fecha }}</span>
+      </div>
       </div>
       <div class="boton">
-        <button @click="verEstudiantes">VER LISTA</button>
+        <button @click="verEstudiantes" >VER LISTA</button>
       </div>
     </div>
 
@@ -101,6 +111,8 @@ export default {
       nombre: this.$route.query.nombre || '',
       apellido: this.$route.query.apellido || '',
       sala: '',
+      currentDate: this.getCurrentDate(),
+      fecha: this.getCurrentDate(), // Agregar la fecha actual aquí
       materia: '',
       semestre: '',
       paralelo: '',
@@ -109,19 +121,27 @@ export default {
       mostrarLista: false,
       students: [],
       seleccionarTodo : false,
+      errors: {}
     };
   },
   methods: {
+    getCurrentDate() {
+      const now = new Date();
+      return now.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    },
     verEstudiantes() {
-      this.obtenerEstudiantes();
+      if (this.validateForm()) {
+        this.obtenerEstudiantes();
+      }
     },
     async obtenerEstudiantes() {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/registro_docentes/sala/${this.sala}`);
+        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/registro_docentes/sala/${this.sala}/fecha/${this.fecha}/inicio/${this.Inicio}/fin/${this.Fin}`);
         const data = await response.json();
         console.log("Datos de estudiantes:", data);
         this.students = data;
         this.mostrarLista = true;
+        this.seleccionarTodos = false;
       } catch (error) {
         console.error("Error al obtener estudiantes:", error);
       }
@@ -162,6 +182,32 @@ export default {
       const endTime = new Date();
       endTime.setHours(hours + 2, 0, 0, 0); // Sumar 2 horas y establecer minutos a 0
       return endTime.toTimeString().substr(0, 5); // Obtener solo HH:MM
+    },
+    validateForm() {
+      this.errors = {};
+      let valid = true;
+
+      if (!this.sala) {
+        this.errors.sala = 'La sala es obligatoria';
+        valid = false;
+      }
+
+      if (!this.materia) {
+        this.errors.materia = 'La materia es obligatoria';
+        valid = false;
+      }
+
+      if (!this.semestre) {
+        this.errors.semestre = 'El semestre es obligatorio';
+        valid = false;
+      }
+
+      if (!this.paralelo) {
+        this.errors.paralelo = 'El paralelo es obligatorio';
+        valid = false;
+      }
+
+      return valid;
     }
   },
   watch: {
@@ -241,9 +287,10 @@ button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.actualizar button{
-  margin: 10px;
-  background: #0a4a3a;
+.actualizar{
+  margin: 5px;
+  background: #0cc08a;
+  color: #000000;
 }
 
 .registrar {
@@ -259,9 +306,6 @@ label {
   margin: 10px;
 }
 
-select {
-  height: 25px;
-}
 
 table {
   width: 100%;
@@ -290,9 +334,17 @@ span {
   margin: 10px;
 }
 
+option, select, input{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: #302f2f;
+  height: 20px;
+  margin-bottom: 5px;
+}
+
 @media(max-width:880px) {
   .contenedor {
-    width: 70%;
+    width: 80%;
+    margin: 0% 10%;
     padding: 10px;
     justify-content: center;
     align-items: center;
