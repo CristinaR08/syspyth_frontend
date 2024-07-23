@@ -53,6 +53,10 @@ const routes = [
     {
         path: "/ver_listas/administradores",
         component: () =>import('@/modulos/Administrador/components/listaAdministradores')
+    },
+    {
+        path: "/asistencia",
+        component: () =>import('@/modulos/Administrador/components/verAsistencia')
     }
     
 ];

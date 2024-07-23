@@ -23,7 +23,7 @@
         <router-link class="router" to="/ver_listas">
           <button>Listas</button>
         </router-link>
-        <router-link class="router" to="/">
+        <router-link class="router" to="/asistencia">
           <button>Asistencia</button>
         </router-link>
         <button class="salir" @click="logout">

@@ -169,9 +169,49 @@ export default {
         console.error('Error:', error);
       }
     },
-    registrarAsistencia() {
-      this.$router.push({ path: '/solicitudExitosa' });
-    },
+    async registrarAsistencia() {
+    try {
+      // Crear el objeto de asistencia
+      const asistencia = {
+        sala: this.sala,
+        materia: this.materia,
+        semestre: this.semestre,
+        paralelo: this.paralelo,
+        fecha: this.fecha,
+        inicio: this.Inicio,
+        fin: this.Fin,
+        docente: {
+          cedula: this.$route.query.cedula,
+          nombre: this.nombre,
+          apellido: this.apellido
+        },
+        estudiantes: this.students.map(student => ({
+          cedula: student.cedula,
+          nombre: student.nombre,
+          apellido: student.apellido,
+          maquina: student.numero_maquina,
+          confirmacion: student.confirmacion
+        }))
+      };
+
+      // Enviar los datos al backend para guardarlos
+      const response = await fetch('http://127.0.0.1:5000/api/v1.0/registrar_asistencia', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(asistencia)
+      });
+
+      if (response.ok) {
+        this.$router.push({ path: '/solicitudExitosa' });
+      } else {
+        console.error('Error al registrar la asistencia');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  },
     getCurrentTime() {
       const now = new Date();
       now.setMinutes(0, 0, 0);
