@@ -19,7 +19,7 @@
         <label for="nombreDocente">Docente:</label>
         <span>{{ nombre }} {{ apellido }}</span>
         <label for="materia">Materia:</label>
-        <input type="text" v-model="materia" id="materia"  placeholder="Ingresar materia" />
+        <input type="text" v-model="materia" id="materia" placeholder="Ingresar materia" />
         <p v-if="errors.materia" class="error">{{ errors.materia }}</p>
       </div>
 
@@ -57,24 +57,24 @@
         <p v-if="errors.paralelo" class="error">{{ errors.paralelo }}</p>
 
         <div class="filaB">
-        <label for="Inicio">Hora Inicio: </label>
-        <span>{{ Inicio }}</span>
+          <label for="Inicio">Hora Inicio: </label>
+          <span>{{ Inicio }}</span>
 
-        <label for="Fin">Hora Fin: </label>
-        <span>{{ Fin }}</span>
+          <label for="Fin">Hora Fin: </label>
+          <span>{{ Fin }}</span>
 
-        <label for="Fecha">Fecha: </label>
-        <span>{{ fecha }}</span>
-      </div>
+          <label for="Fecha">Fecha: </label>
+          <span>{{ fecha }}</span>
+        </div>
       </div>
       <div class="boton">
-        <button @click="verEstudiantes" >VER LISTA</button>
+        <button @click="verEstudiantes">VER LISTA</button>
       </div>
     </div>
 
     <div v-if="mostrarLista" class="lista">
       <h1 class="listado">Registro de Estudiantes</h1>
-      <button class="actualizar" @click="obtenerEstudiantes">Actualizar Lista</button> 
+      <button class="actualizar" @click="obtenerEstudiantes">Actualizar Lista</button>
       <table>
         <thead>
           <tr>
@@ -92,7 +92,8 @@
             <td>{{ student.numero_maquina }}</td>
             <td>{{ student.cedula }}</td>
             <td>
-              <input type="checkbox" v-model="student.confirmacion" @change="cambiarConfirmacion(student.cedula, student.confirmacion)">
+              <input type="checkbox" v-model="student.confirmacion"
+                @change="cambiarConfirmacion(student.cedula, student.confirmacion)">
             </td>
           </tr>
         </tbody>
@@ -120,7 +121,7 @@ export default {
       Fin: '',
       mostrarLista: false,
       students: [],
-      seleccionarTodo : false,
+      seleccionarTodo: false,
       errors: {}
     };
   },
@@ -151,67 +152,53 @@ export default {
         student.confirmacion = this.seleccionarTodos;
       });
     },
-    async cambiarConfirmacion(cedula, confirmacion) {
-      try {
-        const response = await fetch(`http://127.0.0.1:5000/api/v1.0/registro_estudiantes/confirmar/${cedula}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ confirmacion })
-        });
-        if (response.ok) {
-          console.log('Confirmación cambiada con éxito');
-        } else {
-          console.error('Error al cambiar confirmación');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    },
     async registrarAsistencia() {
-    try {
-      // Crear el objeto de asistencia
-      const asistencia = {
-        sala: this.sala,
+      if (!this.validateForm()) {
+        return;
+      }
+
+      const data = {
+        cedula_docente: this.$route.query.cedula || '',
+        nombre_docente: this.nombre,
+        apellido_docente: this.apellido,
+        aula: this.sala,
         materia: this.materia,
         semestre: this.semestre,
         paralelo: this.paralelo,
         fecha: this.fecha,
-        inicio: this.Inicio,
-        fin: this.Fin,
-        docente: {
-          cedula: this.$route.query.cedula,
-          nombre: this.nombre,
-          apellido: this.apellido
-        },
+        hora_inicio: this.Inicio,
+        hora_fin: this.Fin,
         estudiantes: this.students.map(student => ({
           cedula: student.cedula,
           nombre: student.nombre,
           apellido: student.apellido,
+          carrera: student.carrera,
           maquina: student.numero_maquina,
           confirmacion: student.confirmacion
         }))
       };
 
-      // Enviar los datos al backend para guardarlos
-      const response = await fetch('http://127.0.0.1:5000/api/v1.0/registrar_asistencia', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(asistencia)
-      });
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/v1.0/asistencia/confirmar_asistencia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
 
-      if (response.ok) {
-        this.$router.push({ path: '/solicitudExitosa' });
-      } else {
-        console.error('Error al registrar la asistencia');
+        if (response.ok) {
+          const responseData = await response.json();
+          alert(responseData.message); // Mostrar mensaje de éxito
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error al registrar asistencia:', error);
+        alert('Error al registrar asistencia. Por favor, inténtelo de nuevo.');
       }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  },
+    },
     getCurrentTime() {
       const now = new Date();
       now.setMinutes(0, 0, 0);
@@ -248,6 +235,53 @@ export default {
       }
 
       return valid;
+    },
+    async registrarAsistencia() {
+      if (!this.validateForm()) {
+        return;
+      }
+
+      const data = {
+        cedula_docente: this.$route.query.cedula || '',
+        nombre_docente: this.nombre,
+        apellido_docente: this.apellido,
+        aula: this.sala,
+        materia: this.materia,
+        semestre: this.semestre,
+        paralelo: this.paralelo,
+        fecha: this.fecha,
+        hora_inicio: this.Inicio,
+        hora_fin: this.Fin,
+        estudiantes: this.students.map(student => ({
+          cedula: student.cedula,
+          nombre: student.nombre,
+          apellido: student.apellido,
+          carrera: student.carrera,
+          maquina: student.numero_maquina,
+          confirmacion: student.confirmacion
+        }))
+      };
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/v1.0/asistencia/confirmar_asistencia', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          alert(responseData.message); // Mostrar mensaje de éxito
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error al registrar asistencia:', error);
+        alert('Error al registrar asistencia. Por favor, inténtelo de nuevo.');
+      }
     }
   },
   watch: {
@@ -327,7 +361,7 @@ button {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.actualizar{
+.actualizar {
   margin: 5px;
   background: #0cc08a;
   color: #000000;
@@ -374,11 +408,19 @@ span {
   margin: 10px;
 }
 
-option, select, input{
+option,
+select,
+input {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #302f2f;
   height: 20px;
   margin-bottom: 5px;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 @media(max-width:880px) {
