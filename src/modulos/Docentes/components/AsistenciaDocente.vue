@@ -109,6 +109,7 @@ export default {
     const now = new Date();
     now.setMinutes(0, 0, 0);
     return {
+      cedula_docente: this.cedula_docente,
       nombre: this.$route.query.nombre || '',
       apellido: this.$route.query.apellido || '',
       sala: '',
@@ -158,7 +159,7 @@ export default {
       }
 
       const data = {
-        cedula_docente: this.$route.query.cedula || '',
+        
         nombre_docente: this.nombre,
         apellido_docente: this.apellido,
         aula: this.sala,
@@ -172,8 +173,8 @@ export default {
           cedula: student.cedula,
           nombre: student.nombre,
           apellido: student.apellido,
-          carrera: student.carrera,
-          maquina: student.numero_maquina,
+          carrera: student.carrera || '',
+          maquina: student.numero_maquina || '',
           confirmacion: student.confirmacion
         }))
       };
