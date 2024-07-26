@@ -109,12 +109,10 @@ export default {
     const now = new Date();
     now.setMinutes(0, 0, 0);
     return {
-      cedula_docente: this.cedula_docente,
       nombre: this.$route.query.nombre || '',
       apellido: this.$route.query.apellido || '',
       sala: '',
-      currentDate: this.getCurrentDate(),
-      fecha: this.getCurrentDate(), // Agregar la fecha actual aquí
+      fecha: this.getCurrentDate(),
       materia: '',
       semestre: '',
       paralelo: '',
@@ -157,9 +155,7 @@ export default {
       if (!this.validateForm()) {
         return;
       }
-
       const data = {
-        
         nombre_docente: this.nombre,
         apellido_docente: this.apellido,
         aula: this.sala,
@@ -187,10 +183,10 @@ export default {
           },
           body: JSON.stringify(data)
         });
-
         if (response.ok) {
           const responseData = await response.json();
-          alert(responseData.message); // Mostrar mensaje de éxito
+          alert(responseData.message);
+          this.$router.push({ path: '/ingresarDocente' }); 
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
@@ -237,53 +233,6 @@ export default {
 
       return valid;
     },
-    async registrarAsistencia() {
-      if (!this.validateForm()) {
-        return;
-      }
-
-      const data = {
-        cedula_docente: this.$route.query.cedula || '',
-        nombre_docente: this.nombre,
-        apellido_docente: this.apellido,
-        aula: this.sala,
-        materia: this.materia,
-        semestre: this.semestre,
-        paralelo: this.paralelo,
-        fecha: this.fecha,
-        hora_inicio: this.Inicio,
-        hora_fin: this.Fin,
-        estudiantes: this.students.map(student => ({
-          cedula: student.cedula,
-          nombre: student.nombre,
-          apellido: student.apellido,
-          carrera: student.carrera,
-          maquina: student.numero_maquina,
-          confirmacion: student.confirmacion
-        }))
-      };
-
-      try {
-        const response = await fetch('http://127.0.0.1:5000/api/v1.0/asistencia/confirmar_asistencia', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-          const responseData = await response.json();
-          alert(responseData.message); // Mostrar mensaje de éxito
-        } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
-        }
-      } catch (error) {
-        console.error('Error al registrar asistencia:', error);
-        alert('Error al registrar asistencia. Por favor, inténtelo de nuevo.');
-      }
-    }
   },
   watch: {
     Inicio(newInicio) {

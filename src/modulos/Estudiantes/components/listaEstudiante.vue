@@ -184,12 +184,6 @@ export default {
   font-family: 'Courier New', Courier, monospace;
 }
 
-.table-container {
-  width: 70%;
-  margin: 20 auto;
-  overflow-x: auto;
-}
-
 .table {
   width: 70%;
   border-collapse: collapse;

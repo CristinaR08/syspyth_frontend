@@ -57,8 +57,11 @@ const routes = [
     {
         path: "/asistencia",
         component: () =>import('@/modulos/Administrador/components/verAsistencia')
+    },
+    {
+        path: "/detalle",
+        component: () =>import('@/modulos/Administrador/components/detalleAsistencia')
     }
-    
 ];
 
 const router = createRouter({

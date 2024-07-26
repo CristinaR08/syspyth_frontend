@@ -36,11 +36,11 @@
         {{ errorMessage }}
       </div>
     </div>
-    <button class="volver">
+    
           <router-link class="router" to="/principal_admin">
-            Volver
+            <button class="volver">Volver</button>
           </router-link>
-        </button>
+        
   </div>
 </template>
 
@@ -176,6 +176,7 @@ export default {
   font-weight: bold;
   height: 30px;
   width: 80px;
+  cursor: pointer;
 }
 
 .boton button {
@@ -186,6 +187,7 @@ export default {
   background: #4A0E0A;
   border-radius: 10px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;
 }
 
 

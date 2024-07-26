@@ -63,8 +63,8 @@
       };
     },
     async created() {
-      const { cedula_docente, aula, fecha } = this.$route.query;
-      const response = await fetch(`http://127.0.0.1:5000/api/v1.0/detalle_asistencia?cedula_docente=${cedula_docente}&aula=${aula}&fecha=${fecha}`);
+      const {aula, fecha, materia } = this.$route.query;
+      const response = await fetch(`http://127.0.0.1:5000/api/v1.0/detalle_asistencia?aula=${aula}&fecha=${fecha}&materia=${materia}`);
       const data = await response.json();
       this.detalles = data;
     }
