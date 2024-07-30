@@ -7,7 +7,7 @@
         <input type="date" v-model="fecha" />
         <button @click="consultarAsistencias">Consultar</button>
         <div class="tablaAsistencia">
-            <table v-if="asistencias.length">
+            <table v-if="asistencias.length" class="table">
                 <thead>
                     <tr>
                         <th>Aula</th>
@@ -71,11 +71,15 @@ export default {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.tablaAsistencia {
-    width: 60%;
+.table {
+    width: 70%;
     border-collapse: collapse;
     background-color: #000000;
     margin: 20px auto;
+}
+
+.tablaAsistencia {
+  margin-bottom: 20px;
 }
 
 th {
@@ -85,6 +89,7 @@ th {
     font-size: 20px;
     color: #ffffff;
     padding-left: 10px;
+    padding-right: 10px;
     font-family: Georgia, 'Times New Roman', Times, serif;
 
 }
