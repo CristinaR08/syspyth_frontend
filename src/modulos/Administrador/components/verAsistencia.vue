@@ -24,8 +24,11 @@
                         <td>
                             <router-link :to="{
                                 path: '/detalle',
-                                query: { cedula_docente: asistencia.cedula_docente, aula: asistencia.aula, fecha: fecha }
-                            }">
+                                query: {
+                                    aula: asistencia.aula,
+                                    fecha: fecha,
+                                    materia: asistencia.materia
+                                }}">
                                 Ver Asistencia
                             </router-link>
                         </td>
