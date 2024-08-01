@@ -4,58 +4,59 @@
       <h1>Detalle de Asistencia</h1>
     </div>
     <div v-if="detalles.length">
-      <div class="contenedor" >
-      <h2>UNIVERSIDAD CENTRAL DEL ECUADOR</h2>
-      <h3>Facultad de Ingeniería y Ciencias Aplicadas</h3>
-      <h3>Carrera de Ingeniería Civíl</h3>
-      <h3>Laboratorio de Cómputo de Ingeniería Civíl</h3>
-      <div class="detalle-contenedor">
-        <div class="filaA">
-          <label for="aula">Sala:</label>
-          <span>{{ detalles[0].aula }}</span>
-        </div>
-        <div class="filaB">
-          <label for="nombreDocente">Docente:</label>
-          <span>{{ detalles[0].nombre_docente }} {{ detalles[0].apellido_docente }}</span>
-          <label for="materia">Materia:</label>
-          <span>{{ detalles[0].materia }}</span>
-          <label for="fecha">Fecha:</label>
-          <span>{{ detalles[0].fecha }}</span>
-        </div>
-        <div class="filaC">
-          <label for="semestre">Semestre:</label>
-          <span>{{ detalles[0].semestre }}</span>
-          <label for="paralelo">Paralelo:</label>
-          <span>{{ detalles[0].paralelo }}</span>
-          <label for="horaInicio">Hora Inicio:</label>
-          <span>{{ detalles[0].hora_inicio }}</span>
-          <label for="horaFin">Hora Fin:</label>
-          <span>{{ detalles[0].hora_fin }}</span>
+      <div class="contenedor">
+        <h2>UNIVERSIDAD CENTRAL DEL ECUADOR</h2>
+        <h3>Facultad de Ingeniería y Ciencias Aplicadas</h3>
+        <h3>Carrera de Ingeniería Civíl</h3>
+        <h3>Laboratorio de Cómputo de Ingeniería Civíl</h3>
+        <div class="detalle-contenedor">
+          <div class="filaA">
+            <label for="aula">Sala:</label>
+            <span>{{ detalles[0].aula }}</span>
+          </div>
+          <div class="filaB">
+            <label for="nombreDocente">Docente:</label>
+            <span>{{ detalles[0].nombre_docente }} {{ detalles[0].apellido_docente }}</span>
+            <label for="materia">Materia:</label>
+            <span>{{ detalles[0].materia }}</span>
+            <label for="fecha">Fecha:</label>
+            <span>{{ formatDate(detalles[0].fecha) }}</span>
+          </div>
+          <div class="filaC">
+            <label for="semestre">Semestre:</label>
+            <span>{{ detalles[0].semestre }}</span>
+            <label for="paralelo">Paralelo:</label>
+            <span>{{ detalles[0].paralelo }}</span>
+            <label for="horaInicio">Hora Inicio:</label>
+            <span>{{ formatTime(detalles[0].hora_inicio) }}</span>
+            <label for="horaFin">Hora Fin:</label>
+            <span>{{ formatTime(detalles[0].hora_fin) }}</span>
+          </div>
         </div>
       </div>
-    </div>
       <!-- Tabla de Datos del Estudiante -->
-      <h2>Datos de los Estudiantes</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Cédula</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Máquina</th>
-            <th>Confirmación</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(estudiante, index) in detalles" :key="index">
-            <td>{{ estudiante.cedula_estudiante }}</td>
-            <td>{{ estudiante.nombre_estudiante }}</td>
-            <td>{{ estudiante.apellido_estudiante }}</td>
-            <td>{{ estudiante.maquina }}</td>
-            <td>{{ estudiante.confirmacion ? 'Sí' : 'No' }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-contenedor">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Máquina</th>
+              <th>Confirmación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(estudiante, index) in detalles" :key="index">
+              <td>{{ estudiante.cedula_estudiante }}</td>
+              <td>{{ estudiante.nombre_estudiante }}</td>
+              <td>{{ estudiante.apellido_estudiante }}</td>
+              <td>{{ estudiante.maquina }}</td>
+              <td>{{ estudiante.confirmacion ? 'Sí' : 'No' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -65,8 +66,16 @@ export default {
   data() {
     return {
       detalles: [],
-      nombre: '',
     };
+  },
+  methods: {
+    formatDate(dateString) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('es-ES', options);
+    },
+    formatTime(timeString) {
+      return new Date('1970-01-01T' + timeString + 'Z').toTimeString().substr(0, 5);
+    }
   },
   async created() {
     const { aula, fecha, materia } = this.$route.query;
@@ -109,19 +118,99 @@ export default {
 
 .detalle-contenedor {
   margin-bottom: 20px;
+  border: #4A0E0A;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background-color: #DEEEFF;
+  border-radius: 15px;
+  border: 4px solid #000000;
+  margin: 20px 450px;
+  padding: 15px;
 }
 
 
-h2,h3{
+h2,
+h3 {
   margin: 0px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: black;
+  font-size: 15px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+label,
+span {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  color: #000000;
+  margin: 10px;
 }
 
 label {
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+}
+
+.table {
+  width: 70%;
+  border-collapse: collapse;
+  background-color: #000000;
+  margin: 0 auto;
+}
+
+.table-contenedor {
+  margin-bottom: 20px;
+}
+
+th {
+  background-color: #0c3708;
+  /*encabezado*/
+  font-weight: bold;
+  height: 40px;
   font-size: 25px;
+  color: #ffffff;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+td {
+  height: 30px;
+}
+
+tr {
+  font-size: 20px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #edf7ed;
+  /*filas impares*/
   color: #000000;
-  margin: 10px;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #d0f4c5;
+  /*filas pares*/
+  color: #000000;
+}
+
+@media(max-width:880px) {
+  .detalle-contenedor {
+    margin: 20px 25px;
+    ;
+  }
+
+  .table {
+    width: 90%;
+  }
+  th{
+    font-size: 20px;
+  }
+  tr{
+    font-size: 15px;
+  }
 }
 </style>
