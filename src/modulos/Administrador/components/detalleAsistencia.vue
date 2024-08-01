@@ -4,36 +4,43 @@
       <h1>Detalle de Asistencia</h1>
     </div>
     <div v-if="detalles.length">
-      <div class="contenedor" >
-      <h2>UNIVERSIDAD CENTRAL DEL ECUADOR</h2>
-      <h3>Facultad de Ingeniería y Ciencias Aplicadas</h3>
-      <h3>Carrera de Ingeniería Civíl</h3>
-      <h3>Laboratorio de Cómputo de Ingeniería Civíl</h3>
-      <div class="detalle-contenedor">
-        <div class="filaA">
-          <label for="aula">Sala:</label>
-          <span>{{ detalles[0].aula }}</span>
-        </div>
-        <div class="filaB">
-          <label for="nombreDocente">Docente:</label>
-          <span>{{ detalles[0].nombre_docente }} {{ detalles[0].apellido_docente }}</span>
-          <label for="materia">Materia:</label>
-          <span>{{ detalles[0].materia }}</span>
-          <label for="fecha">Fecha:</label>
-          <span>{{ detalles[0].fecha }}</span>
-        </div>
-        <div class="filaC">
-          <label for="semestre">Semestre:</label>
-          <span>{{ detalles[0].semestre }}</span>
-          <label for="paralelo">Paralelo:</label>
-          <span>{{ detalles[0].paralelo }}</span>
-          <label for="horaInicio">Hora Inicio:</label>
-          <span>{{ detalles[0].hora_inicio }}</span>
-          <label for="horaFin">Hora Fin:</label>
-          <span>{{ detalles[0].hora_fin }}</span>
+      <div class="contenedor">
+        <h2>UNIVERSIDAD CENTRAL DEL ECUADOR</h2>
+        <h3>Facultad de Ingeniería y Ciencias Aplicadas</h3>
+        <h3>Carrera de Ingeniería Civíl</h3>
+        <h3>Laboratorio de Cómputo de Ingeniería Civíl</h3>
+        <div class="detalle-contenedor">
+          <div class="filaA">
+            <label for="aula">Sala:</label>
+            <span>{{ detalles[0].aula }}</span>
+          </div>
+          <div class="filaB">
+            <label for="nombreDocente">Docente:</label>
+            <span>{{ detalles[0].nombre_docente }} {{ detalles[0].apellido_docente }}</span>
+            <label for="materia">Materia:</label>
+            <span>{{ detalles[0].materia }}</span>
+            <label for="fecha">Fecha:</label>
+            <span>{{ detalles[0].fecha }}</span>
+          </div>
+          <div class="filaC">
+            <label for="semestre">Semestre:</label>
+            <span>{{ detalles[0].semestre }}</span>
+            <label for="paralelo">Paralelo:</label>
+            <span>{{ detalles[0].paralelo }}</span>
+            <label for="horaInicio">Hora Inicio:</label>
+            <span>{{ detalles[0].hora_inicio }}</span>
+            <label for="horaFin">Hora Fin:</label>
+            <span>{{ detalles[0].hora_fin }}</span>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="center-content">
+        <button class="descarga" @click="descargarPDF">
+          <img src="@/assets/download.png" alt="Descargar" />
+        </button>
+      </div>
+
       <!-- Tabla de Datos del Estudiante -->
       <h2>Datos de los Estudiantes</h2>
       <table>
@@ -61,6 +68,9 @@
 </template>
 
 <script>
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export default {
   data() {
     return {
@@ -68,6 +78,82 @@ export default {
       nombre: '',
     };
   },
+
+  methods: {
+    descargarPDF() {
+      const doc = new jsPDF({
+        orientation: "portrait",
+      });
+
+      // TEXTO DE INICIO -----------------------------------------------
+      // Configurar el formato y la orientación del PDF
+      const textoReglamento1 =
+        "UNIVERSIDAD CENTRAL DEL ECUADOR\n" +
+        "Facultad de Ingeniería y Ciencias Aplicadas\n" +
+        "Carrera de Ingeniería Civíl\n" +
+        "Laboratorio de Cómputo de Ingeniería Civíl\n";
+
+      const maxWidth = doc.internal.pageSize.width - 15; // Reducir el ancho disponible para el texto
+
+      const textoReglamento2 =
+        "\nSala: " + this.detalles[0].aula +
+        "\nDocente: " + this.detalles[0].nombre_docente + "Materia: " + this.detalles[0].materia + "Fecha: " + this.detalles[0].fecha +
+        "\nSemestre: " + this.detalles[0].semestre + "Paralelo: " + this.detalles[0].paralelo + "Hora Inicio: " + this.detalles[0].hora_inicio + "Hora Fin: " + this.detalles[0].hora_fin
+
+    
+      const textLines = doc.splitTextToSize(
+        textoReglamento1 + textoReglamento2,
+        maxWidth
+      );
+
+      const pageWidth = doc.internal.pageSize.width; // Calcula el ancho de la página
+      let yPosition = 10; // Posición vertical inicial
+
+      // Agregar cada línea de texto al PDF centrado
+      doc.setFontSize(11);
+      textLines.forEach(line => {
+        const textWidth = doc.getTextWidth(line);
+        const xPosition = (pageWidth - textWidth) / 2;
+        doc.text(line, xPosition, yPosition);
+        yPosition += 5; // espacio entre líneas 
+      });
+
+      /// tabla de asistencia -----------------------------
+      const columns = [
+        "Cédula",
+        "Nombre",
+        "Apellido",
+        "Máquina",
+        "Confirmación",
+      ];
+
+      const data = this.detalles.map((asistencia) => {
+        return [
+          asistencia.cedula_estudiante,
+          asistencia.nombre_estudiante,
+          asistencia.apellido_estudiante,
+          asistencia.maquina,
+          asistencia.confirmacion,
+        ];
+      });
+
+      doc.autoTable({
+        head: [columns],
+        body: data,
+        startY: yPosition + 5,
+        theme: "striped",
+      });
+      // Obtener la posición final de la tabla
+      const finalYTable = doc.autoTable.previous.finalY;
+      // Calcular la posición y justo después de la tabla con 2 saltos de línea
+      let yAfterTable = finalYTable + 2 * 10; // 10 es el espacio entre líneas que has definido
+
+      // Descargar el PDF
+      doc.save("Asistencia.pdf");
+
+    },
+  },
+
   async created() {
     const { aula, fecha, materia } = this.$route.query;
 
@@ -112,7 +198,8 @@ export default {
 }
 
 
-h2,h3{
+h2,
+h3 {
   margin: 0px;
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: black;
@@ -123,5 +210,19 @@ label {
   font-size: 25px;
   color: #000000;
   margin: 10px;
+}
+
+.descarga {
+  border-radius: 10px;
+}
+
+.descarga:hover {
+  background: rgb(153, 171, 231);
+}
+
+img {
+  margin: 3px 0px 0px;
+  width: 30px;
+  height: 30px;
 }
 </style>
