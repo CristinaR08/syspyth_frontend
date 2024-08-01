@@ -34,6 +34,12 @@
           </div>
         </div>
       </div>
+      <div class="center-content">
+        <button class="descarga" @click="descargarPDF">
+          <img src="@/assets/download.png" alt="Descargar" />
+        </button>
+      </div>
+      
       <!-- Tabla de Datos del Estudiante -->
       <div class="table-contenedor">
         <table class="table">
@@ -62,6 +68,9 @@
 </template>
 
 <script>
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 export default {
   data() {
     return {
@@ -75,8 +84,81 @@ export default {
     },
     formatTime(timeString) {
       return new Date('1970-01-01T' + timeString + 'Z').toTimeString().substr(0, 5);
-    }
+    },
+    descargarPDF() {
+      const doc = new jsPDF({
+        orientation: "portrait",
+      });
+
+      // TEXTO DE INICIO -----------------------------------------------
+      // Configurar el formato y la orientación del PDF
+      const textoReglamento1 =
+        "UNIVERSIDAD CENTRAL DEL ECUADOR\n" +
+        "Facultad de Ingeniería y Ciencias Aplicadas\n" +
+        "Carrera de Ingeniería Civíl\n" +
+        "Laboratorio de Cómputo de Ingeniería Civíl\n";
+
+      const maxWidth = doc.internal.pageSize.width - 15; // Reducir el ancho disponible para el texto
+
+      const textoReglamento2 =
+        "\nSala: " + this.detalles[0].aula +
+        "\nDocente: " + this.detalles[0].nombre_docente + "Materia: " + this.detalles[0].materia + "Fecha: " + this.detalles[0].fecha +
+        "\nSemestre: " + this.detalles[0].semestre + "Paralelo: " + this.detalles[0].paralelo + "Hora Inicio: " + this.detalles[0].hora_inicio + "Hora Fin: " + this.detalles[0].hora_fin
+
+    
+      const textLines = doc.splitTextToSize(
+        textoReglamento1 + textoReglamento2,
+        maxWidth
+      );
+
+      const pageWidth = doc.internal.pageSize.width; // Calcula el ancho de la página
+      let yPosition = 10; // Posición vertical inicial
+
+      // Agregar cada línea de texto al PDF centrado
+      doc.setFontSize(11);
+      textLines.forEach(line => {
+        const textWidth = doc.getTextWidth(line);
+        const xPosition = (pageWidth - textWidth) / 2;
+        doc.text(line, xPosition, yPosition);
+        yPosition += 5; // espacio entre líneas 
+      });
+
+      /// tabla de asistencia -----------------------------
+      const columns = [
+        "Cédula",
+        "Nombre",
+        "Apellido",
+        "Máquina",
+        "Confirmación",
+      ];
+
+      const data = this.detalles.map((asistencia) => {
+        return [
+          asistencia.cedula_estudiante,
+          asistencia.nombre_estudiante,
+          asistencia.apellido_estudiante,
+          asistencia.maquina,
+          asistencia.confirmacion,
+        ];
+      });
+
+      doc.autoTable({
+        head: [columns],
+        body: data,
+        startY: yPosition + 5,
+        theme: "striped",
+      });
+      // Obtener la posición final de la tabla
+      const finalYTable = doc.autoTable.previous.finalY;
+      // Calcular la posición y justo después de la tabla con 2 saltos de línea
+      let yAfterTable = finalYTable + 2 * 10; // 10 es el espacio entre líneas que has definido
+
+      // Descargar el PDF
+      doc.save("Asistencia.pdf");
+
+    },
   },
+
   async created() {
     const { aula, fecha, materia } = this.$route.query;
 
@@ -212,5 +294,18 @@ tbody tr:nth-child(even) {
   tr{
     font-size: 15px;
   }
+}
+.descarga {
+  border-radius: 10px;
+}
+
+.descarga:hover {
+  background: rgb(153, 171, 231);
+}
+
+img {
+  margin: 3px 0px 0px;
+  width: 30px;
+  height: 30px;
 }
 </style>
