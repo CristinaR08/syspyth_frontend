@@ -101,9 +101,9 @@ export default {
       const maxWidth = doc.internal.pageSize.width - 15; // Reducir el ancho disponible para el texto
 
       const textoReglamento2 =
-        "\nSala: " + this.detalles[0].aula +
-        "\nDocente: " + this.detalles[0].nombre_docente + "Materia: " + this.detalles[0].materia + "Fecha: " + this.detalles[0].fecha +
-        "\nSemestre: " + this.detalles[0].semestre + "Paralelo: " + this.detalles[0].paralelo + "Hora Inicio: " + this.detalles[0].hora_inicio + "Hora Fin: " + this.detalles[0].hora_fin
+        "\nSALA: " + this.detalles[0].aula +
+        "\nDOCENTE: " + this.detalles[0].nombre_docente + "  MATERIA: " + this.detalles[0].materia + "  FECHA: " + this.formatDate(this.detalles[0].fecha) +
+        "\nSEMESTRE: " + this.detalles[0].semestre + "  PARARELO: " + this.detalles[0].paralelo + "  HORA INICIO: " + this.formatTime(this.detalles[0].hora_inicio) + "  HORA FIN: " + this.formatTime(this.detalles[0].hora_fin)
 
     
       const textLines = doc.splitTextToSize(
@@ -297,6 +297,7 @@ tbody tr:nth-child(even) {
 }
 .descarga {
   border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .descarga:hover {
