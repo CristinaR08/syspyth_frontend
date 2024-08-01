@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="table-responsive">
-      <table class="table table-dark table-striped-columns">
+      <table class="table">
         <thead>
           <tr>
             <th scope="col" @click="sortBy('id')" style="cursor: pointer;">ID</th>

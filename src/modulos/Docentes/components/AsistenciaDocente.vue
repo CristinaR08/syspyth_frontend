@@ -27,32 +27,32 @@
         <label for="semestre">Semestre: </label>
         <select id="semestre" v-model="semestre">
           <option value="">Selecciona un semestre</option>
-          <option value="primero">Primero</option>
-          <option value="segundo">Segundo</option>
-          <option value="tercer">Tercero</option>
-          <option value="cuarto">Cuarto</option>
-          <option value="quinto">Quinto</option>
-          <option value="sexto">Sexto</option>
-          <option value="septimo">Séptimo</option>
-          <option value="octavo">Octavo</option>
-          <option value="noveno">Noveno</option>
-          <option value="decimo">Décimo</option>
+          <option value="Primero">Primero</option>
+          <option value="Segundo">Segundo</option>
+          <option value="Tercero">Tercero</option>
+          <option value="Cuarto">Cuarto</option>
+          <option value="Quinto">Quinto</option>
+          <option value="Sexto">Sexto</option>
+          <option value="Séptimo">Séptimo</option>
+          <option value="Octavo">Octavo</option>
+          <option value="Noveno">Noveno</option>
+          <option value="Décimo">Décimo</option>
         </select>
         <p v-if="errors.semestre" class="error">{{ errors.semestre }}</p>
 
         <label for="paralelo">Paralelo: </label>
         <select id="paralelo" v-model="paralelo">
           <option value="">Selecciona un paralelo</option>
-          <option value="P1">1</option>
-          <option value="P2">2</option>
-          <option value="P3">3</option>
-          <option value="P4">4</option>
-          <option value="P5">5</option>
-          <option value="P6">6</option>
-          <option value="P7">7</option>
-          <option value="P8">8</option>
-          <option value="P9">9</option>
-          <option value="P10">10</option>
+          <option value="P-01">1</option>
+          <option value="P-02">2</option>
+          <option value="P-03">3</option>
+          <option value="P-04">4</option>
+          <option value="P-05">5</option>
+          <option value="P-06">6</option>
+          <option value="P-07">7</option>
+          <option value="P-08">8</option>
+          <option value="P-09">9</option>
+          <option value="P-10">10</option>
         </select>
         <p v-if="errors.paralelo" class="error">{{ errors.paralelo }}</p>
 
