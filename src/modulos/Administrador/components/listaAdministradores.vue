@@ -107,7 +107,7 @@ export default {
     methods: {
         async aplicarFiltros() {
             try {
-                const response = await axios.get('http://localhost:5000/api/v1.0/administrador/lista');
+                const response = await axios.get('http://10.3.2.44:8087/api/v1.0/administrador/lista');
                 let adm = response.data;
                 if (this.filtroApellido) {
                     adm = adm.filter(admin => admin.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
@@ -124,7 +124,7 @@ export default {
         },
         async fetchAdmin() {
             try {
-                const response = await axios.get('http://localhost:5000/api/v1.0/administrador/lista');
+                const response = await axios.get('http://10.3.2.44:8087/api/v1.0/administrador/lista');
                 this.admins = response.data;
             } catch (error) {
                 console.error('No hay administradores', error);
@@ -133,7 +133,7 @@ export default {
         async fetchAdminCedula() {
             if (this.cedula) {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/v1.0/administrador/consultar/${this.cedula}`);
+                    const response = await axios.get(`http://10.3.2.44:8087/api/v1.0/administrador/consultar/${this.cedula}`);
                     this.admins = [response.data];
                 } catch (error) {
                     console.error('Error fetching student by cedula:', error);
@@ -147,7 +147,7 @@ export default {
             try {
                 let response;
                 if (this.cedula) {
-                    response = await axios.get(`http://localhost:5000/api/v1.0/docentes/consultar/${this.cedula}`);
+                    response = await axios.get(`http://10.3.2.44:8087/api/v1.0/docentes/consultar/${this.cedula}`);
                     this.docentes = [response.data];
                 } else {
                     await this.aplicarFiltros();

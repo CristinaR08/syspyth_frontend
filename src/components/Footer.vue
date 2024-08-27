@@ -2,7 +2,7 @@
   <div class="container">
     <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" />
     <div class="footer-section">
-      <p>Desarrollado por: Cristina L. Rivera S., 2024</p>
+      <p>Desarrollado por: Cristina Rivera S. & Alfredo Guamaninga Y., 2024</p>
       <p>Responsable :Ing. Jorge Rivera</p>
     </div>
   </div>

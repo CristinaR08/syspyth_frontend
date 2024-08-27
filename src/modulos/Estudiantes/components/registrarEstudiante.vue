@@ -6,7 +6,7 @@
     <div class="container">
       <div class="datos">
         <label for="cedula">Cédula:</label>
-        <input type="text" v-model="cedula" id="cedula" pattern="\d{10}" title="Ingrese los 10 dígitos de su cédula"/>
+        <input type="text" v-model="cedula" id="cedula" pattern="\d{10}" title="Ingrese los 10 dígitos de su cédula" maxlength="10"/>
         
         <label for="nombre">Nombre:</label>
         <input type="text" v-model="nombre" id="nombre" pattern="[A-Za-z]" title="Ingrese su nombre"/>
@@ -18,7 +18,14 @@
         <input type="email" v-model="correo" id="correo" pattern="^[a-zA-Z0-9._%+-]+@uce.edu.ec$" title="El correo debe ser de la UCE"/>
         
         <label for="carrera">Carrera:</label>
-        <input type="text" v-model="carrera" id="carrera" pattern="[A-Za-z]" title="Ingrese su carrera"/>
+        <select class="carrera" v-model="carrera">
+        <option disabled value="">Selecciona tu carrera</option>
+        <option value="Computación">Computación</option>
+        <option value="Ingeniería Civil">Ingeniería Civil</option>
+        <option value="Mecánica">Mecánica</option>
+        <option value="Diseño industrial">Diseño industrial</option>
+        <option value="Informática">Informática</option>
+      </select>
       </div>
 
       <div class="boton">
@@ -72,12 +79,12 @@ export default {
 
       // Validación para nombre, apellido y carrera (solo caracteres alfanuméricos)
       if (!(/^[A-Za-z]+$/.test(this.nombre)) || !(/^[A-Za-z]+$/.test(this.apellido)) || !(/^[A-Za-z]+$/.test(this.carrera))) {
-        this.errorMessage = 'Evite usar tildes. Solo letras';
+        this.errorMessage = 'Evite usar tildes y espacios';
         return;
       }
 
       try {
-        const response = await axios.post('http://127.0.0.1:5000/api/v1.0/estudiantes/registrar', {
+        const response = await axios.post('http://10.3.2.44:8087/api/v1.0/estudiantes/registrar', {
           cedula: this.cedula,
           nombre: this.nombre,
           apellido: this.apellido,
@@ -123,6 +130,12 @@ alert{
   font-size: 40px;
 }
 
+.carrera{
+  margin-top: 10px;
+  height: 40px;
+  width: 150px;
+}
+
 .container {
   display: grid;
   justify-content: center;
@@ -131,6 +144,7 @@ alert{
   border-radius: 15px;
   border: 4px solid #000000;
   margin: 0% 30%;
+  margin-bottom: 150px;
 }
 .datos{
   display:grid;
@@ -174,5 +188,6 @@ label{
     width: 50%;
   }
 }
+
 
 </style>

@@ -103,7 +103,7 @@ export default {
   methods: {
     async aplicarFiltros() {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
+        const response = await axios.get('http://10.3.2.44:8087/api/v1.0/estudiantes/lista');
         let estudiantes = response.data;
         if (this.filtroApellido) {
           estudiantes = estudiantes.filter(student => student.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
@@ -120,7 +120,7 @@ export default {
     },
     async fetchEstudiantes() {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1.0/estudiantes/lista');
+        const response = await axios.get('http://10.3.2.44:8087/api/v1.0/estudiantes/lista');
         this.students = response.data;
       } catch (error) {
         console.error('No existen estudiantes', error);
@@ -130,7 +130,7 @@ export default {
       try {
         let response;
         if (this.cedula) {
-          response = await axios.get(`http://localhost:5000/api/v1.0/estudiantes/consultar/${this.cedula}`);
+          response = await axios.get(`http://10.3.2.44:8087/api/v1.0/estudiantes/consultar/${this.cedula}`);
           this.students = [response.data];
         } else {
           await this.aplicarFiltros();

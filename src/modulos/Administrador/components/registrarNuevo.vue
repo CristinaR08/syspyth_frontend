@@ -93,9 +93,9 @@ export default {
       let url = '';
 
       if (this.cargo === 'docente') {
-        url = 'http://127.0.0.1:5000/api/v1.0/docentes/registrar';
+        url = 'http://10.3.2.44:8087/api/v1.0/docentes/registrar';
       } else if (this.cargo === 'admin') {
-        url = 'http://127.0.0.1:5000/api/v1.0/administrador/registrar';
+        url = 'http://10.3.2.44:8087/api/v1.0/administrador/registrar';
       }
 
       const response = await axios.post(url, {
