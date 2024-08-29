@@ -4,7 +4,7 @@ module.exports = defineConfig({
 })
 const path = require('path');
 
-module.exports = {
+/* module.exports = {
   configureWebpack: {
     resolve: {
       fallback: {
@@ -12,12 +12,12 @@ module.exports = {
       }
     }
   }
-};
+}; */
 
 // vue.config.js
 module.exports = {
   devServer: {
-    proxy: 'http://127.0.0.1:8086'
+    proxy: 'http://127.0.0.1:86'
   }
 };
 

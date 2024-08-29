@@ -19,7 +19,7 @@
         
         <label for="carrera">Carrera:</label>
         <select class="carrera" v-model="carrera">
-        <option disabled value="">Selecciona tu carrera</option>
+        <option class="carrera" disabled value="">Selecciona tu carrera</option>
         <option value="Computación">Computación</option>
         <option value="Ingeniería Civil">Ingeniería Civil</option>
         <option value="Mecánica">Mecánica</option>
@@ -130,10 +130,18 @@ alert{
   font-size: 40px;
 }
 
-.carrera{
+select{
   margin-top: 10px;
-  height: 40px;
-  width: 150px;
+  margin-left: 10px;
+  height: 30px;
+  width: 160px;
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+option{
+  font-size: 15px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .container {
@@ -143,8 +151,8 @@ alert{
   background-color:#DEEEFF ;
   border-radius: 15px;
   border: 4px solid #000000;
-  margin: 0% 30%;
-  margin-bottom: 150px;
+  margin: 80px 30%;
+
 }
 .datos{
   display:grid;

@@ -1,10 +1,12 @@
 <template>
-  <div class="container">
-    <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" />
-    <div class="footer-section">
-      <p>Desarrollado por: Cristina Rivera S. & Alfredo Guamaninga Y., 2024</p>
-      <p>Responsable :Ing. Jorge Rivera</p>
-    </div>
+  <div class="page-container">
+    <footer class="footer">
+      <img id="logoUCE" alt="Logo" src="@/assets/logoUCE.png" />
+      <div class="footer-section">
+        <p>Desarrollado por: Cristina Rivera S. & Alfredo Guamaninga Y., 2024</p>
+        <p>Responsable: Ing. Jorge Rivera</p>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -15,29 +17,27 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  margin-top: 20px;
+
+.content {
+  flex: 1;
+  padding: 20px;
+  /* Ajusta el margen para que el contenido no se superponga con el footer */
+}
+.footer {
+  padding: 10px;
+  background-color: #0a2a4b94;
+  box-shadow: 0 2px 4px rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 20px;
-  height: 105px;
-  background-color: #0a2a4b94;
-  box-shadow: 0 2px 4px rgb(0, 0, 0);
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-top: auto;
 }
 
 .footer-section {
-  color: aliceblue;
-  font-size: 20px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   text-align: right;
-  width: 100%; 
-  text-shadow: 2px 2px 2px rgb(0, 0, 0); 
+  text-shadow: 2px 2px 2px rgb(0, 0, 0);
 }
 
 #logoUCE {

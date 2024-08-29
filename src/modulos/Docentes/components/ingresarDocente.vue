@@ -164,7 +164,7 @@ export default {
   background-color: #deeeff;
   border-radius: 15px;
   border: 4px solid #000000;
-  margin: 0% 30%;
+  margin: 70px 30%;
 }
 
 label,

@@ -2,7 +2,6 @@
   <div class="title">
     <h1>Registro de Asistencia Estudiante</h1>
   </div>
-
   <div class="indicacion">
     <h1>Por favor ingrese su cédula</h1>
   </div>
@@ -27,9 +26,9 @@
       <span>{{ carrera }}</span>
     </div>
 
-    <div>
+    <div class="sala">
       <label for="sala">Sala:</label>
-      <select id="sala" v-model="sala" @change="updateMachineOptions">
+      <select v-model="sala" @change="updateMachineOptions">
         <option disabled value="">Selecciona un aula</option>
         <option value="Aula 1">Aula 1</option>
         <option value="Aula 2">Aula 2</option>
@@ -74,7 +73,7 @@
 
 <script>
 import axios from "axios";
-const os = require("os");
+//const os = require("os");
 
 export default {
   data() {
@@ -243,6 +242,7 @@ export default {
   margin-bottom: 10px;
 }
 
+
 .Datos {
   display: grid;
   grid-template-columns: repeat(2, 100px);
@@ -273,14 +273,15 @@ export default {
 
 .contenedor {
   display: grid;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   background-color: #deeeff;
   border-radius: 15px;
   border: 4px solid #000000;
-  margin: 1% 35%;
-  margin-bottom: 100px;
+  margin: 10px;
+  margin-left: 40%;
   width: fit-content;
+  padding: 10px;
 }
 
 .registrar {
@@ -320,7 +321,7 @@ span {
   font-size: 25px;
   color: #444242;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 20px;
   text-align: center;
 }
 
@@ -331,10 +332,10 @@ input {
   padding: 5px 5px;
 }
 
-@media (max-width: 930px) {
+@media(max-width:900px) {
   .contenedor {
-    margin: 1% 25%;
-    margin-bottom: 110px;
+    margin-left: 30%;
   }
 }
+
 </style>
