@@ -136,7 +136,7 @@ export default {
     },
     async obtenerEstudiantes() {
       try {
-        const response = await fetch(`http://10.3.2.44:8087/api/v1.0/registro_docentes/sala/${this.sala}/fecha/${this.fecha}/inicio/${this.Inicio}/fin/${this.Fin}`);
+        const response = await fetch(`http://localhost:8080/api/v1.0/registro_docentes/sala/${this.sala}/fecha/${this.fecha}/inicio/${this.Inicio}/fin/${this.Fin}`);
         const data = await response.json();
         console.log("Datos de estudiantes:", data);
         this.students = data;
@@ -176,7 +176,7 @@ export default {
       };
 
       try {
-        const response = await fetch('http://10.3.2.44:8087/api/v1.0/asistencia/confirmar_asistencia', {
+        const response = await fetch('http://localhost:8080/api/v1.0/asistencia/confirmar_asistencia', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

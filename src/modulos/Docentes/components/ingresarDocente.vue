@@ -95,7 +95,7 @@ export default {
       // Lógica para verificar credenciales de administrador en la base de datos
       try {
         const response = await fetch(
-          "http://10.3.2.44:8087/api/v1.0/administrador/autenticar",
+          "http://localhost:8080/api/v1.0/administrador/autenticar",
           {
             method: "POST",
             headers: {
@@ -114,7 +114,7 @@ export default {
       // Lógica para verificar credenciales de docente en la base de datos
       try {
         const response = await fetch(
-          "http://10.3.2.44:8087/api/v1.0/docentes/autenticar",
+          "http://localhost:8080/api/v1.0/docentes/autenticar",
           {
             method: "POST",
             headers: {

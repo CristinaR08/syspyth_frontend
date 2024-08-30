@@ -107,7 +107,7 @@ export default {
   methods: {
     async aplicarFiltros() {
       try {
-        const response = await axios.get('http://10.3.2.44:8087/api/v1.0/docentes/lista');
+        const response = await axios.get('http://localhost:8080/api/v1.0/docentes/lista');
         let profes = response.data;
         if (this.filtroApellido) {
           profes = profes.filter(docente => docente.apellido.toLowerCase().includes(this.filtroApellido.toLowerCase()));
@@ -124,7 +124,7 @@ export default {
     },
     async fetchDocentes() {
       try {
-        const response = await axios.get('http://10.3.2.44:8087/api/v1.0/docentes/lista');
+        const response = await axios.get('http://localhost:8080/api/v1.0/docentes/lista');
         this.docentes = response.data;
       } catch (error) {
         console.error('Mo hay docentes:', error);
@@ -134,7 +134,7 @@ export default {
       try {
         let response;
         if (this.cedula) {
-          response = await axios.get(`http://10.3.2.44:8087/api/v1.0/docentes/consultar/${this.cedula}`);
+          response = await axios.get(`http://localhost:8080/api/v1.0/docentes/consultar/${this.cedula}`);
           this.docentes = [response.data];
         } else {
           await this.aplicarFiltros();

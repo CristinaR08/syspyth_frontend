@@ -84,7 +84,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://10.3.2.44:8087/api/v1.0/estudiantes/registrar', {
+        const response = await axios.post('http://localhost:8080/api/v1.0/estudiantes/registrar', {
           cedula: this.cedula,
           nombre: this.nombre,
           apellido: this.apellido,

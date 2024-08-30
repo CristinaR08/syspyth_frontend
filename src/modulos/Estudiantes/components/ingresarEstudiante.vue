@@ -142,7 +142,7 @@ export default {
 
       try {
         const response = await axios.get(
-          `http://10.3.2.44:8087/api/v1.0/estudiantes/consultar/${this.cedula}`
+          `http://localhost:8080/api/v1.0/estudiantes/consultar/${this.cedula}`
         );
         const data = response.data;
         this.nombre = data.nombre;
@@ -159,6 +159,7 @@ export default {
       }
     },
     async registrarAsistencia() {
+      this.maquina = this.selectedMachine
       if (!this.cedulaValida || !this.maquina || !this.sala) {
         this.cedulaError =
           "Debes completar todos los campos antes de registrar la asistencia";
@@ -175,7 +176,7 @@ export default {
 
       try {
         const response = await axios.post(
-          "http://10.3.2.44:8087/api/v1.0/registro_estudiantes/registrar",
+          "http://localhost:8080/api/v1.0/registro_estudiantes/registrar",
           registroData
         );
         alert("Asistencia registrada exitosamente");

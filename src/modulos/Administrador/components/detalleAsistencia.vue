@@ -168,7 +168,7 @@ export default {
     }
 
     try {
-      const response = await fetch(`http://10.3.2.44:8087/api/v1.0/asistencia/detalle_asistencia?aula=${aula}&fecha=${fecha}&materia=${materia}`);
+      const response = await fetch(`http://localhost:8080/api/v1.0/asistencia/detalle_asistencia?aula=${aula}&fecha=${fecha}&materia=${materia}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

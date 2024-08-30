@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     obtainGetApi() {
-      const path = "http://10.3.2.44:8087/api/v1.0/tasks";
+      const path = "http://localhost:8080/api/v1.0/tasks";
       axios.get(path).then((response) => {
           this.tasks = response.data.tasks;
         })

@@ -50,7 +50,7 @@ export default {
     methods: {
         async consultarAsistencias() {
             if (!this.fecha) return;
-            const response = await fetch(`http://10.3.2.44:8087/api/v1.0/asistencia/consultar_asistencias?fecha=${this.fecha}`);
+            const response = await fetch(`http://localhost:8080/api/v1.0/asistencia/consultar_asistencias?fecha=${this.fecha}`);
             const data = await response.json();
             this.asistencias = data;
         }
